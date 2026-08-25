@@ -67,19 +67,33 @@ plano gratuito) e rode:
 npx prisma migrate deploy
 ```
 
-## Deploy (Vercel)
+## Deploy (Netlify)
 
-1. Suba este repositório no GitHub.
-2. Importe o projeto na Vercel, apontando o **Root Directory** para `app/`.
-3. Configure as variáveis de ambiente do `.env` no painel da Vercel.
-4. Configure `DATABASE_URL` para o Postgres de produção.
-5. Depois do primeiro deploy, rode as migrations contra o banco de produção
-   (`npx prisma migrate deploy`, com `DATABASE_URL` de produção).
+O repositório já tem um `netlify.toml` na raiz configurado (base `app/`,
+plugin oficial `@netlify/plugin-nextjs` já instalado). Só falta:
+
+1. Em https://app.netlify.com, **Add new site → Import an existing project**,
+   conecte o repositório `maternidade-encantada` no GitHub.
+2. A Netlify detecta o `netlify.toml` automaticamente (build command,
+   diretório base e o plugin de Next.js já vêm configurados).
+3. Em **Site configuration → Environment variables**, adicione as mesmas
+   variáveis do `.env` (`DATABASE_URL` já apontando para o Postgres de
+   produção, chaves da Mercado Pago e Melhor Envio, `ADMIN_SESSION_SECRET`).
+4. Depois do primeiro deploy, rode as migrations contra o banco de produção
+   (localmente, com `DATABASE_URL` de produção no `.env`):
+   ```bash
+   npx prisma migrate deploy
+   ```
+5. Em **Domain management**, adicione `maternidadeencantada.com.br` como
+   domínio customizado — a Netlify mostra os registros DNS exatos para
+   colar no painel do Registro.br.
 
 ## Fotos de produto
 
 Em desenvolvimento, o upload de imagem no admin salva os arquivos em
-`public/uploads/`. **Isso não funciona em produção na Vercel** (o
-filesystem é somente leitura em serverless) — antes de ir para produção,
-trocar `saveUploadedImage` em `src/app/actions/adminProducts.ts` por
-armazenamento externo, como o [Vercel Blob](https://vercel.com/docs/storage/vercel-blob).
+`public/uploads/`. **Isso não funciona em produção** (funções serverless
+da Netlify, assim como de qualquer provedor desse tipo, têm sistema de
+arquivos somente leitura/temporário) — antes de ir para produção, trocar
+`saveUploadedImage` em `src/app/actions/adminProducts.ts` por armazenamento
+externo, como o [Cloudinary](https://cloudinary.com) (tem plano gratuito) ou
+[Netlify Blobs](https://docs.netlify.com/build/data-and-storage/netlify-blobs/).
