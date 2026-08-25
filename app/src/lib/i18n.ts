@@ -12,6 +12,19 @@ export const LOCALE_LABELS: Record<Locale, string> = {
   es: "ES",
 };
 
+const HREFLANG: Record<Locale, string> = { pt: "pt-BR", en: "en", es: "es" };
+
+/** Builds a Next.js `alternates.languages` map for a path shared across all three locales. */
+export function localeAlternates(path: string) {
+  const languages: Record<string, string> = {};
+  for (const locale of Object.keys(LOCALE_PATHS) as Locale[]) {
+    const base = LOCALE_PATHS[locale] === "/" ? "" : LOCALE_PATHS[locale];
+    languages[HREFLANG[locale]] = `${base}${path}` || "/";
+  }
+  languages["x-default"] = path || "/";
+  return languages;
+}
+
 type Dictionary = {
   nav: { products: string; kits: string; courses: string; story: string; cart: string };
   hero: { eyebrow: string; heading1: string; heading2: string; text: string; cta: string };
@@ -78,8 +91,8 @@ export const dictionaries: Record<Locale, Dictionary> = {
       text2: "Encantando famílias colecionadoras por todo o país.",
       title3: "Envio Brasil e exterior",
       text3: "Compra online segura, entrega onde você estiver.",
-      title4: "Loja física no Iguatemi",
-      text4: "Shopping Iguatemi Esplanada, Ala Norte.",
+      title4: "Loja física em Sorocaba",
+      text4: "Shopping Iguatemi Esplanada, Ala Norte, Sorocaba.",
     },
     showcase: { kicker: "Vitrine", title: "Bonecas em destaque", viewAll: "Ver coleção completa" },
     story: {
@@ -109,7 +122,7 @@ export const dictionaries: Record<Locale, Dictionary> = {
       privacy: "Política de privacidade",
       terms: "Termos de uso",
       visit: "Visite",
-      store: "Shopping Iguatemi Esplanada",
+      store: "Shopping Iguatemi Esplanada, Sorocaba",
       rights: "Todos os direitos reservados.",
     },
     cookies: {
@@ -123,7 +136,7 @@ export const dictionaries: Record<Locale, Dictionary> = {
       title: "Arte que nasce do amor pela maternidade",
       p1: "A Maternidade Encantada nasceu do sonho de transformar o amor pela maternidade em arte. Há 15 anos, criamos bonecas reborn feitas à mão, com técnicas de pintura em camadas, cabelos implantados fio a fio e detalhes que trazem o realismo de um bebê de verdade.",
       p2: "Cada peça é única, pensada para colecionadoras e famílias apaixonadas — um processo artesanal que une técnica, paciência e muito carinho.",
-      p3: "Além da loja online, você pode conhecer nossas bonecas pessoalmente na loja física no Shopping Iguatemi Esplanada, e acompanhar novidades no Instagram",
+      p3: "Além da loja online, você pode conhecer nossas bonecas reborn pessoalmente na loja física no Shopping Iguatemi Esplanada, em Sorocaba, e acompanhar novidades no Instagram",
     },
   },
   en: {
