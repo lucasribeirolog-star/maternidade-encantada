@@ -1,32 +1,33 @@
 import Image from "next/image";
-import { notFound } from "next/navigation";
-import type { Metadata } from "next";
-import { prisma } from "@/lib/prisma";
 import { formatCents } from "@/lib/money";
 import { btnClass } from "@/lib/ui";
 import { addToCartFormAction } from "@/app/actions/cart";
+import { dictionaries, type Locale } from "@/lib/i18n";
 
-type Props = { params: Promise<{ slug: string }> };
+type ProductDetail = {
+  id: string;
+  name: string;
+  description: string;
+  priceCents: number;
+  compareAtPriceCents: number | null;
+  weightGrams: number;
+  heightCm: number;
+  widthCm: number;
+  lengthCm: number;
+  images: { url: string; alt: string }[];
+  category: { name: string } | null;
+};
 
-async function getProduct(slug: string) {
-  return prisma.product.findUnique({
-    where: { slug, active: true },
-    include: { images: { orderBy: { position: "asc" } }, category: true },
-  });
-}
+const LOCALE_TAG: Record<Locale, string> = { pt: "pt-BR", en: "en-US", es: "es-ES" };
 
-export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  const { slug } = await params;
-  const product = await getProduct(slug);
-  if (!product) return {};
-  return { title: product.name, description: product.description };
-}
-
-export default async function ProdutoPage({ params }: Props) {
-  const { slug } = await params;
-  const product = await getProduct(slug);
-  if (!product) notFound();
-
+export function ProductDetailContent({
+  locale,
+  product,
+}: {
+  locale: Locale;
+  product: ProductDetail;
+}) {
+  const t = dictionaries[locale].productDetail;
   const mainImage = product.images[0];
 
   return (
@@ -77,17 +78,17 @@ export default async function ProdutoPage({ params }: Props) {
               ))}
             </select>
             <button type="submit" className={btnClass("primary")}>
-              Adicionar ao carrinho
+              {t.addToCart}
             </button>
           </form>
 
           <dl className="mt-10 grid grid-cols-2 gap-4 border-t border-line pt-6 text-sm text-ink-soft">
             <div>
-              <dt className="text-ink">Peso</dt>
-              <dd>{(product.weightGrams / 1000).toLocaleString("pt-BR")} kg</dd>
+              <dt className="text-ink">{t.weight}</dt>
+              <dd>{(product.weightGrams / 1000).toLocaleString(LOCALE_TAG[locale])} kg</dd>
             </div>
             <div>
-              <dt className="text-ink">Dimensões</dt>
+              <dt className="text-ink">{t.dimensions}</dt>
               <dd>
                 {product.heightCm}×{product.widthCm}×{product.lengthCm} cm
               </dd>

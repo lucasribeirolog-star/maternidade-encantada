@@ -1,6 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { formatCents } from "@/lib/money";
+import { LOCALE_PATHS, type Locale } from "@/lib/i18n";
 
 type Product = {
   id: string;
@@ -11,9 +12,16 @@ type Product = {
   images: { url: string; alt: string }[];
 };
 
-export function FeaturedCarousel({ products }: { products: Product[] }) {
+export function FeaturedCarousel({
+  products,
+  locale = "pt",
+}: {
+  products: Product[];
+  locale?: Locale;
+}) {
   if (products.length === 0) return null;
 
+  const base = LOCALE_PATHS[locale] === "/" ? "" : LOCALE_PATHS[locale];
   const track = [...products, ...products];
 
   return (
@@ -24,7 +32,7 @@ export function FeaturedCarousel({ products }: { products: Product[] }) {
           return (
             <Link
               key={`${product.id}-${i}`}
-              href={`/produtos/${product.slug}`}
+              href={`${base}/produtos/${product.slug}`}
               className="group block w-56 shrink-0 overflow-hidden rounded-2xl bg-white shadow-[0_20px_40px_-28px_rgba(62,39,35,0.35)] sm:w-64"
             >
               <div className="aspect-square overflow-hidden bg-cream-2">

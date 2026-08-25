@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
+import { headers } from "next/headers";
 import "./globals.css";
-import { Header } from "@/components/Header";
-import { Footer } from "@/components/Footer";
 
 export const metadata: Metadata = {
   title: {
@@ -12,14 +11,15 @@ export const metadata: Metadata = {
     "Bonecas reborn feitas à mão, com realismo e carinho, há 15 anos. Envio para todo o Brasil e exterior.",
 };
 
-export default function RootLayout({ children }: { children: React.ReactNode }) {
+const HTML_LANG: Record<string, string> = { pt: "pt-BR", en: "en", es: "es" };
+
+export default async function RootLayout({ children }: { children: React.ReactNode }) {
+  const headerList = await headers();
+  const locale = headerList.get("x-locale") ?? "pt";
+
   return (
-    <html lang="pt-BR" className="h-full antialiased">
-      <body className="min-h-full flex flex-col bg-cream text-ink">
-        <Header />
-        <main className="flex-1 flex flex-col">{children}</main>
-        <Footer />
-      </body>
+    <html lang={HTML_LANG[locale] ?? "pt-BR"} className="h-full antialiased">
+      <body className="min-h-full flex flex-col bg-cream text-ink">{children}</body>
     </html>
   );
 }

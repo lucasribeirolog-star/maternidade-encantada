@@ -1,6 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { formatCents } from "@/lib/money";
+import { LOCALE_PATHS, type Locale } from "@/lib/i18n";
 
 type ProductCardData = {
   slug: string;
@@ -10,12 +11,19 @@ type ProductCardData = {
   images: { url: string; alt: string }[];
 };
 
-export function ProductCard({ product }: { product: ProductCardData }) {
+export function ProductCard({
+  product,
+  locale = "pt",
+}: {
+  product: ProductCardData;
+  locale?: Locale;
+}) {
   const image = product.images[0];
+  const base = LOCALE_PATHS[locale] === "/" ? "" : LOCALE_PATHS[locale];
 
   return (
     <Link
-      href={`/produtos/${product.slug}`}
+      href={`${base}/produtos/${product.slug}`}
       className="group block overflow-hidden rounded-2xl bg-white shadow-[0_20px_40px_-28px_rgba(62,39,35,0.35)]"
     >
       <div className="aspect-square overflow-hidden bg-cream-2">

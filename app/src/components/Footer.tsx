@@ -1,8 +1,12 @@
 import Image from "next/image";
 import Link from "next/link";
 import { Logo } from "./Logo";
+import { dictionaries, LOCALE_PATHS, type Locale } from "@/lib/i18n";
 
-export function Footer() {
+export function Footer({ locale = "pt" }: { locale?: Locale }) {
+  const t = dictionaries[locale];
+  const base = LOCALE_PATHS[locale] === "/" ? "" : LOCALE_PATHS[locale];
+
   return (
     <footer className="relative mt-24 overflow-hidden text-cream/90">
       <Image
@@ -23,30 +27,28 @@ export function Footer() {
         <div className="grid grid-cols-2 md:grid-cols-4 gap-10 border-t border-white/10 pt-10">
           <div className="col-span-2 md:col-span-1">
             <Logo size={72} />
-            <p className="mt-4 text-sm text-cream/70 max-w-[32ch]">
-              Bonecas reborn feitas à mão, com realismo e carinho.
-            </p>
+            <p className="mt-4 text-sm text-cream/70 max-w-[32ch]">{t.footer.tagline}</p>
           </div>
           <div>
-            <h5 className="text-xs tracking-wider uppercase text-cream/50 mb-4">Loja</h5>
+            <h5 className="text-xs tracking-wider uppercase text-cream/50 mb-4">{t.footer.shop}</h5>
             <ul className="space-y-2 text-sm">
-              <li><Link href="/produtos" className="hover:text-white">Bonecas</Link></li>
-              <li><Link href="/carrinho" className="hover:text-white">Carrinho</Link></li>
-              <li><Link href="/sobre" className="hover:text-white">Nossa história</Link></li>
+              <li><Link href={`${base}/produtos`} className="hover:text-white">{t.footer.products}</Link></li>
+              <li><Link href="/carrinho" className="hover:text-white">{t.footer.cart}</Link></li>
+              <li><Link href={`${base}/sobre`} className="hover:text-white">{t.footer.story}</Link></li>
             </ul>
           </div>
           <div>
-            <h5 className="text-xs tracking-wider uppercase text-cream/50 mb-4">Atendimento</h5>
+            <h5 className="text-xs tracking-wider uppercase text-cream/50 mb-4">{t.footer.support}</h5>
             <ul className="space-y-2 text-sm">
-              <li><Link href="/trocas-e-devolucoes" className="hover:text-white">Trocas e devoluções</Link></li>
-              <li><Link href="/politica-de-privacidade" className="hover:text-white">Política de privacidade</Link></li>
-              <li><Link href="/termos-de-uso" className="hover:text-white">Termos de uso</Link></li>
+              <li><Link href={`${base}/trocas-e-devolucoes`} className="hover:text-white">{t.footer.returns}</Link></li>
+              <li><Link href={`${base}/politica-de-privacidade`} className="hover:text-white">{t.footer.privacy}</Link></li>
+              <li><Link href={`${base}/termos-de-uso`} className="hover:text-white">{t.footer.terms}</Link></li>
             </ul>
           </div>
           <div>
-            <h5 className="text-xs tracking-wider uppercase text-cream/50 mb-4">Visite</h5>
+            <h5 className="text-xs tracking-wider uppercase text-cream/50 mb-4">{t.footer.visit}</h5>
             <ul className="space-y-2 text-sm">
-              <li>Shopping Iguatemi Esplanada</li>
+              <li>{t.footer.store}</li>
               <li>
                 <a
                   href="https://www.instagram.com/maternidadeencantadaoficial/"
@@ -59,7 +61,7 @@ export function Footer() {
           </div>
         </div>
         <p className="mt-10 text-center text-xs text-cream/40">
-          © {new Date().getFullYear()} Maternidade Encantada. Todos os direitos reservados.
+          © {new Date().getFullYear()} Maternidade Encantada. {t.footer.rights}
         </p>
       </div>
     </footer>
