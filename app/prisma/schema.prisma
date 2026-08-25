@@ -1,0 +1,127 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model Category {
+  id       String    @id @default(cuid())
+  name     String
+  slug     String    @unique
+  position Int       @default(0)
+  products Product[]
+}
+
+model Product {
+  id          String   @id @default(cuid())
+  name        String
+  slug        String   @unique
+  description String
+  priceCents  Int
+  compareAtPriceCents Int?
+  weightGrams Int      @default(500)
+  heightCm    Int      @default(20)
+  widthCm     Int      @default(20)
+  lengthCm    Int      @default(20)
+  active      Boolean  @default(true)
+  featured    Boolean  @default(false)
+  categoryId  String?
+  category    Category? @relation(fields: [categoryId], references: [id])
+  images      ProductImage[]
+  cartItems   CartItem[]
+  orderItems  OrderItem[]
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model ProductImage {
+  id        String  @id @default(cuid())
+  productId String
+  product   Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+  url       String
+  alt       String  @default("")
+  position  Int     @default(0)
+}
+
+model Cart {
+  id        String     @id @default(cuid())
+  token     String     @unique
+  items     CartItem[]
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+}
+
+model CartItem {
+  id        String  @id @default(cuid())
+  cartId    String
+  cart      Cart    @relation(fields: [cartId], references: [id], onDelete: Cascade)
+  productId String
+  product   Product @relation(fields: [productId], references: [id])
+  quantity  Int     @default(1)
+
+  @@unique([cartId, productId])
+}
+
+enum OrderStatus {
+  pending
+  paid
+  failed
+  shipped
+  cancelled
+}
+
+model Order {
+  id        String      @id @default(cuid())
+  orderNumber String    @unique
+  status    OrderStatus @default(pending)
+
+  customerName  String
+  customerEmail String
+  customerPhone String
+  customerDocument String
+
+  shippingZip     String
+  shippingStreet  String
+  shippingNumber  String
+  shippingComplement String @default("")
+  shippingNeighborhood String
+  shippingCity    String
+  shippingState   String
+
+  shippingMethod    String  @default("")
+  shippingCostCents Int     @default(0)
+  subtotalCents     Int
+  totalCents        Int
+
+  mpPaymentId String?
+  mpStatus    String?
+
+  melhorEnvioShipmentId String?
+  trackingCode          String?
+
+  items OrderItem[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model OrderItem {
+  id             String  @id @default(cuid())
+  orderId        String
+  order          Order   @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  productId      String?
+  product        Product? @relation(fields: [productId], references: [id])
+  nameSnapshot   String
+  priceCentsSnapshot Int
+  quantity       Int
+}
+
+model AdminUser {
+  id           String @id @default(cuid())
+  email        String @unique
+  passwordHash String
+  createdAt    DateTime @default(now())
+}

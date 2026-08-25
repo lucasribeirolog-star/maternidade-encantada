@@ -1,0 +1,64 @@
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,500&family=Jost:wght@400;500;600&family=Alex+Brush&display=swap');
+@import "tailwindcss";
+
+:root {
+  --cream: #FDF6F1;
+  --cream-2: #F7E6E0;
+  --ink: #3E2723;
+  --ink-soft: #6B4A44;
+  --rose: #C97B8C;
+  --rose-deep: #B15E71;
+  --wine: #5C2A3A;
+  --wine-deep: #3F1B27;
+  --gold: #B08D57;
+  --gold-soft: #EFE1C8;
+  --line: rgba(62, 39, 35, 0.12);
+}
+
+@theme inline {
+  --color-cream: var(--cream);
+  --color-cream-2: var(--cream-2);
+  --color-ink: var(--ink);
+  --color-ink-soft: var(--ink-soft);
+  --color-rose: var(--rose);
+  --color-rose-deep: var(--rose-deep);
+  --color-wine: var(--wine);
+  --color-wine-deep: var(--wine-deep);
+  --color-gold: var(--gold);
+  --color-gold-soft: var(--gold-soft);
+  --color-line: var(--line);
+  --font-display: "Playfair Display", Georgia, serif;
+  --font-body: "Jost", ui-sans-serif, system-ui, sans-serif;
+  --font-script: "Alex Brush", cursive;
+}
+
+body {
+  background: var(--cream);
+  color: var(--ink);
+  font-family: var(--font-body);
+  -webkit-font-smoothing: antialiased;
+}
+
+h1, h2, h3, h4 {
+  font-family: var(--font-display);
+  text-wrap: balance;
+}
+
+@keyframes marquee {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+
+.marquee-track {
+  animation: marquee 36s linear infinite;
+}
+
+.marquee-track:hover {
+  animation-play-state: paused;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .marquee-track {
+    animation: none;
+  }
+}

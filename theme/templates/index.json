@@ -1,0 +1,263 @@
+{
+  "sections": {
+    "image_banner": {
+      "type": "image-banner",
+      "blocks": {
+        "heading": {
+          "type": "heading",
+          "settings": {
+            "heading": "Bebês quase reais, feitos com amor",
+            "heading_size": "h0"
+          }
+        },
+        "text": {
+          "type": "text",
+          "settings": {
+            "text": "Há 15 anos criando bonecas reborn com realismo e carinho. Envio para todo o Brasil e exterior.",
+            "text_style": "body"
+          }
+        },
+        "button": {
+          "type": "buttons",
+          "settings": {
+            "button_label_1": "Ver coleção",
+            "button_link_1": "shopify://collections/all",
+            "button_style_secondary_1": false,
+            "button_label_2": "",
+            "button_link_2": "",
+            "button_style_secondary_2": false
+          }
+        }
+      },
+      "block_order": [
+        "heading",
+        "text",
+        "button"
+      ],
+      "settings": {
+        "image": "shopify://shop_images/hero-boneca.jpg",
+        "image_overlay_opacity": 30,
+        "image_height": "large",
+        "desktop_content_position": "middle-center",
+        "show_text_box": false,
+        "image_behavior": "none",
+        "desktop_content_alignment": "center",
+        "color_scheme": "scheme-3",
+        "mobile_content_alignment": "center",
+        "stack_images_on_mobile": false,
+        "show_text_below": false
+      }
+    },
+    "why_us": {
+      "type": "multicolumn",
+      "blocks": {
+        "col1": {
+          "type": "column",
+          "settings": {
+            "title": "Feitas à mão, com realismo",
+            "text": "<p>Cada boneca reborn é pintada e finalizada à mão, camada por camada, até parecer um bebê de verdade.</p>",
+            "link_label": "",
+            "link": ""
+          }
+        },
+        "col2": {
+          "type": "column",
+          "settings": {
+            "title": "15 anos de experiência",
+            "text": "<p>Mais de uma década encantando famílias colecionadoras em todo o Brasil.</p>",
+            "link_label": "",
+            "link": ""
+          }
+        },
+        "col3": {
+          "type": "column",
+          "settings": {
+            "title": "Envio para todo o Brasil e exterior",
+            "text": "<p>Compre online com segurança e receba onde estiver.</p>",
+            "link_label": "",
+            "link": ""
+          }
+        },
+        "col4": {
+          "type": "column",
+          "settings": {
+            "title": "Loja física no Iguatemi Esplanada",
+            "text": "<p>Visite e conheça pessoalmente nossas bonecas reborn.</p>",
+            "link_label": "",
+            "link": ""
+          }
+        }
+      },
+      "block_order": [
+        "col1",
+        "col2",
+        "col3",
+        "col4"
+      ],
+      "settings": {
+        "title": "Por que escolher a Maternidade Encantada",
+        "heading_size": "h1",
+        "image_width": "third",
+        "image_ratio": "adapt",
+        "column_alignment": "center",
+        "background_style": "none",
+        "button_label": "",
+        "button_link": "",
+        "color_scheme": "scheme-1",
+        "columns_desktop": 4,
+        "column_padding": 0,
+        "columns_mobile": "1",
+        "padding_top": 52,
+        "padding_bottom": 52
+      }
+    },
+    "featured_collection": {
+      "type": "featured-collection",
+      "settings": {
+        "title": "Bonecas em destaque",
+        "heading_size": "h1",
+        "description": "",
+        "show_description": false,
+        "description_style": "body",
+        "collection": "all",
+        "products_to_show": 8,
+        "columns_desktop": 4,
+        "color_scheme": "scheme-2",
+        "full_width": false,
+        "show_view_all": true,
+        "view_all_style": "solid",
+        "enable_desktop_slider": false,
+        "swipe_on_mobile": false,
+        "image_ratio": "square",
+        "image_shape": "default",
+        "show_secondary_image": true,
+        "show_vendor": false,
+        "show_rating": false,
+        "quick_add": "none",
+        "columns_mobile": "2",
+        "padding_top": 52,
+        "padding_bottom": 52
+      }
+    },
+    "our_story": {
+      "type": "image-with-text",
+      "blocks": {
+        "heading": {
+          "type": "heading",
+          "settings": {
+            "heading": "Nossa história"
+          }
+        },
+        "text": {
+          "type": "text",
+          "settings": {
+            "text": "<p>A Maternidade Encantada nasceu do sonho de transformar o amor pela maternidade em arte. Há 15 anos, cada boneca reborn é criada à mão com técnicas de pintura em camadas, cabelos implantados fio a fio e detalhes que trazem o realismo de um bebê de verdade — peças únicas para colecionadoras e famílias apaixonadas.</p>"
+          }
+        },
+        "button": {
+          "type": "button",
+          "settings": {
+            "button_label": "Conheça nossa loja",
+            "button_link": "shopify://collections/all",
+            "button_style_secondary": false
+          }
+        }
+      },
+      "block_order": [
+        "heading",
+        "text",
+        "button"
+      ],
+      "settings": {
+        "image": "shopify://shop_images/story-boneca.jpg",
+        "image_height": "medium",
+        "desktop_image_width": "medium",
+        "layout": "image_first",
+        "desktop_content_position": "middle",
+        "desktop_content_alignment": "left",
+        "color_scheme": "scheme-5",
+        "content_layout": "no-overlap",
+        "mobile_content_alignment": "left"
+      }
+    },
+    "collection_list": {
+      "type": "collection-list",
+      "blocks": {
+        "col1": {
+          "type": "featured_collection",
+          "settings": {
+            "collection": ""
+          }
+        },
+        "col2": {
+          "type": "featured_collection",
+          "settings": {
+            "collection": ""
+          }
+        },
+        "col3": {
+          "type": "featured_collection",
+          "settings": {
+            "collection": ""
+          }
+        }
+      },
+      "block_order": [
+        "col1",
+        "col2",
+        "col3"
+      ],
+      "settings": {
+        "title": "Compre por categoria",
+        "heading_size": "h1",
+        "image_ratio": "square",
+        "color_scheme": "scheme-1",
+        "swipe_on_mobile": false,
+        "columns_desktop": 3,
+        "columns_mobile": "1",
+        "padding_top": 52,
+        "padding_bottom": 52
+      }
+    },
+    "newsletter": {
+      "type": "newsletter",
+      "blocks": {
+        "heading": {
+          "type": "heading",
+          "settings": {
+            "heading": "Fique por dentro dos lançamentos"
+          }
+        },
+        "paragraph": {
+          "type": "paragraph",
+          "settings": {
+            "paragraph": "Cadastre seu e-mail e receba novidades sobre novas bonecas e promoções exclusivas."
+          }
+        },
+        "form": {
+          "type": "email_form",
+          "settings": {}
+        }
+      },
+      "block_order": [
+        "heading",
+        "paragraph",
+        "form"
+      ],
+      "settings": {
+        "color_scheme": "scheme-3",
+        "full_width": true,
+        "padding_top": 52,
+        "padding_bottom": 52
+      }
+    }
+  },
+  "order": [
+    "image_banner",
+    "why_us",
+    "featured_collection",
+    "our_story",
+    "collection_list",
+    "newsletter"
+  ]
+}
