@@ -1,5 +1,6 @@
 import { dictionaries, type Locale } from "@/lib/i18n";
 import { btnClass } from "@/lib/ui";
+import { Logo } from "./Logo";
 
 const MAPS_QUERY = "Maternidade Encantada - Shopping Iguatemi Esplanada, Sorocaba - SP";
 const MAPS_EMBED_SRC = `https://www.google.com/maps?q=${encodeURIComponent(
@@ -37,9 +38,14 @@ export function StoreMap({ locale }: { locale: Locale }) {
           </div>
 
           <div className="flex flex-col justify-center rounded-2xl bg-white p-8 shadow-[0_20px_40px_-28px_rgba(62,39,35,0.35)]">
-            <h3 className="font-display text-lg font-semibold">
-              Maternidade Encantada — Shopping Iguatemi Esplanada
-            </h3>
+            <div className="flex items-center gap-4">
+              <Logo size={64} asLink={false} />
+              <h3 className="font-display text-lg font-semibold">
+                Maternidade Encantada
+                <br />
+                Shopping Iguatemi Esplanada
+              </h3>
+            </div>
 
             <dl className="mt-6 space-y-4 text-sm">
               <div>
