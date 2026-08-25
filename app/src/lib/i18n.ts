@@ -74,6 +74,7 @@ type Dictionary = {
     phoneLabel: string;
     directions: string;
     call: string;
+    reviews: string;
   };
 };
 
@@ -155,6 +156,7 @@ export const dictionaries: Record<Locale, Dictionary> = {
       phoneLabel: "Telefone / WhatsApp",
       directions: "Ver rotas no Google Maps",
       call: "Chamar no WhatsApp",
+      reviews: "avaliações no Google",
     },
   },
   en: {
@@ -234,6 +236,7 @@ export const dictionaries: Record<Locale, Dictionary> = {
       phoneLabel: "Phone / WhatsApp",
       directions: "Get directions on Google Maps",
       call: "Message us on WhatsApp",
+      reviews: "reviews on Google",
     },
   },
   es: {
@@ -313,6 +316,7 @@ export const dictionaries: Record<Locale, Dictionary> = {
       phoneLabel: "Teléfono / WhatsApp",
       directions: "Ver ruta en Google Maps",
       call: "Escribir por WhatsApp",
+      reviews: "reseñas en Google",
     },
   },
 };

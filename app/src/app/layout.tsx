@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { headers } from "next/headers";
 import "./globals.css";
+import { ContactFloatingButtons } from "@/components/ContactFloatingButtons";
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://maternidadeencantada.com.br"),
@@ -45,6 +46,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
     <html lang={HTML_LANG[locale] ?? "pt-BR"} className="h-full antialiased">
       <body className="min-h-full flex flex-col bg-cream text-ink">
         {children}
+        <ContactFloatingButtons />
         <script
           type="application/ld+json"
            
@@ -64,10 +66,10 @@ export default async function RootLayout({ children }: { children: React.ReactNo
               priceRange: "$$",
               address: {
                 "@type": "PostalAddress",
-                streetAddress: "Av. Professora Izoraida Marques Peres — Shopping Iguatemi Esplanada, Ala Norte",
+                streetAddress: "Av. Professora Izoraida Marques Peres, 401 — Shopping Iguatemi Esplanada",
                 addressLocality: "Sorocaba",
                 addressRegion: "SP",
-                postalCode: "18110-650",
+                postalCode: "18048-110",
                 addressCountry: "BR",
               },
               geo: {
@@ -76,6 +78,11 @@ export default async function RootLayout({ children }: { children: React.ReactNo
                 longitude: -47.4634434,
               },
               hasMap: "https://maps.app.goo.gl/GGfbzTLz1E1xHJAo9",
+              aggregateRating: {
+                "@type": "AggregateRating",
+                ratingValue: 4.8,
+                reviewCount: 18,
+              },
               areaServed: ["Sorocaba", "Brasil", "Internacional"],
               sameAs: ["https://www.instagram.com/maternidadeencantadaoficial/"],
             }),

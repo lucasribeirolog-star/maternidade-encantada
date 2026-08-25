@@ -1,6 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { FeaturedCarousel } from "@/components/FeaturedCarousel";
+import { StoreMap } from "@/components/StoreMap";
 import { btnClass } from "@/lib/ui";
 import { dictionaries, LOCALE_PATHS, type Locale } from "@/lib/i18n";
 
@@ -113,6 +114,8 @@ export function HomeContent({ locale, featured }: { locale: Locale; featured: Pr
           </div>
         </div>
       </section>
+
+      <StoreMap locale={locale} />
     </>
   );
 }

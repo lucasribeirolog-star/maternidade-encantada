@@ -1,6 +1,10 @@
 import { dictionaries, type Locale } from "@/lib/i18n";
 import { btnClass } from "@/lib/ui";
 import { Logo } from "./Logo";
+import { StarRating } from "./StarRating";
+
+const GOOGLE_RATING = 4.8;
+const GOOGLE_REVIEW_COUNT = 18;
 
 const MAPS_QUERY = "Maternidade Encantada - Shopping Iguatemi Esplanada, Sorocaba - SP";
 const MAPS_EMBED_SRC = `https://www.google.com/maps?q=${encodeURIComponent(
@@ -40,11 +44,19 @@ export function StoreMap({ locale }: { locale: Locale }) {
           <div className="flex flex-col justify-center rounded-2xl bg-white p-8 shadow-[0_20px_40px_-28px_rgba(62,39,35,0.35)]">
             <div className="flex items-center gap-4">
               <Logo size={64} asLink={false} />
-              <h3 className="font-display text-lg font-semibold">
-                Maternidade Encantada
-                <br />
-                Shopping Iguatemi Esplanada
-              </h3>
+              <div>
+                <h3 className="font-display text-lg font-semibold">
+                  Maternidade Encantada
+                  <br />
+                  Shopping Iguatemi Esplanada
+                </h3>
+                <div className="mt-2">
+                  <StarRating
+                    rating={GOOGLE_RATING}
+                    count={`(${GOOGLE_REVIEW_COUNT}) ${t.reviews}`}
+                  />
+                </div>
+              </div>
             </div>
 
             <dl className="mt-6 space-y-4 text-sm">
@@ -53,11 +65,11 @@ export function StoreMap({ locale }: { locale: Locale }) {
                   {t.addressLabel}
                 </dt>
                 <dd className="mt-1 text-ink">
-                  Av. Professora Izoraida Marques Peres
+                  Av. Professora Izoraida Marques Peres, 401
                   <br />
-                  Shopping Iguatemi Esplanada, Ala Norte
+                  Shopping Iguatemi Esplanada
                   <br />
-                  Parque Campolim, Sorocaba - SP, 18110-650
+                  Parque Campolim, Sorocaba - SP, 18048-110
                 </dd>
               </div>
               <div>
