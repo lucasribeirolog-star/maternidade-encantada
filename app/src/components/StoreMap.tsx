@@ -1,0 +1,88 @@
+import { dictionaries, type Locale } from "@/lib/i18n";
+import { btnClass } from "@/lib/ui";
+
+const MAPS_QUERY = "Maternidade Encantada - Shopping Iguatemi Esplanada, Sorocaba - SP";
+const MAPS_EMBED_SRC = `https://www.google.com/maps?q=${encodeURIComponent(
+  MAPS_QUERY
+)}&ll=-23.5336612,-47.4634434&z=16&output=embed`;
+const MAPS_DIRECTIONS_URL = "https://maps.app.goo.gl/GGfbzTLz1E1xHJAo9";
+const WHATSAPP_URL = "https://wa.me/5511991352246";
+const WHATSAPP_DISPLAY = "+55 (11) 99135-2246";
+
+export function StoreMap({ locale }: { locale: Locale }) {
+  const t = dictionaries[locale].location;
+
+  return (
+    <section className="bg-cream-2 py-20">
+      <div className="mx-auto max-w-6xl px-6">
+        <div className="mb-11 max-w-xl">
+          <span className="mb-2 block text-xs tracking-[0.16em] uppercase text-rose-deep">
+            {t.kicker}
+          </span>
+          <h2 className="text-3xl font-semibold">{t.title}</h2>
+          <p className="mt-3 text-ink-soft">{t.text}</p>
+        </div>
+
+        <div className="grid gap-8 md:grid-cols-2">
+          <div className="overflow-hidden rounded-2xl shadow-[0_20px_40px_-24px_rgba(62,39,35,0.35)]">
+            <iframe
+              src={MAPS_EMBED_SRC}
+              width="100%"
+              height="100%"
+              style={{ border: 0, minHeight: 340 }}
+              loading="lazy"
+              referrerPolicy="no-referrer-when-downgrade"
+              title="Maternidade Encantada — Shopping Iguatemi Esplanada, Sorocaba"
+            />
+          </div>
+
+          <div className="flex flex-col justify-center rounded-2xl bg-white p-8 shadow-[0_20px_40px_-28px_rgba(62,39,35,0.35)]">
+            <h3 className="font-display text-lg font-semibold">
+              Maternidade Encantada — Shopping Iguatemi Esplanada
+            </h3>
+
+            <dl className="mt-6 space-y-4 text-sm">
+              <div>
+                <dt className="text-xs uppercase tracking-wider text-ink-soft">
+                  {t.addressLabel}
+                </dt>
+                <dd className="mt-1 text-ink">
+                  Av. Professora Izoraida Marques Peres
+                  <br />
+                  Shopping Iguatemi Esplanada, Ala Norte
+                  <br />
+                  Parque Campolim, Sorocaba - SP, 18110-650
+                </dd>
+              </div>
+              <div>
+                <dt className="text-xs uppercase tracking-wider text-ink-soft">
+                  {t.phoneLabel}
+                </dt>
+                <dd className="mt-1 text-ink">{WHATSAPP_DISPLAY}</dd>
+              </div>
+            </dl>
+
+            <div className="mt-8 flex flex-wrap gap-3">
+              <a
+                href={MAPS_DIRECTIONS_URL}
+                target="_blank"
+                rel="noopener noreferrer"
+                className={btnClass("primary")}
+              >
+                {t.directions}
+              </a>
+              <a
+                href={WHATSAPP_URL}
+                target="_blank"
+                rel="noopener noreferrer"
+                className={btnClass("outline")}
+              >
+                {t.call}
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}

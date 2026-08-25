@@ -66,6 +66,15 @@ type Dictionary = {
   };
   cookies: { text: string; policy: string; decline: string; accept: string };
   aboutPage: { kicker: string; title: string; p1: string; p2: string; p3: string };
+  location: {
+    kicker: string;
+    title: string;
+    text: string;
+    addressLabel: string;
+    phoneLabel: string;
+    directions: string;
+    call: string;
+  };
 };
 
 export const dictionaries: Record<Locale, Dictionary> = {
@@ -138,6 +147,15 @@ export const dictionaries: Record<Locale, Dictionary> = {
       p2: "Cada peça é única, pensada para colecionadoras e famílias apaixonadas — um processo artesanal que une técnica, paciência e muito carinho.",
       p3: "Além da loja online, você pode conhecer nossas bonecas reborn pessoalmente na loja física no Shopping Iguatemi Esplanada, em Sorocaba, e acompanhar novidades no Instagram",
     },
+    location: {
+      kicker: "Visite a loja",
+      title: "Venha conhecer de perto",
+      text: "Nossa loja física fica dentro do Shopping Iguatemi Esplanada, em Sorocaba — venha conhecer nossas bonecas reborn pessoalmente.",
+      addressLabel: "Endereço",
+      phoneLabel: "Telefone / WhatsApp",
+      directions: "Ver rotas no Google Maps",
+      call: "Chamar no WhatsApp",
+    },
   },
   en: {
     nav: {
@@ -208,6 +226,15 @@ export const dictionaries: Record<Locale, Dictionary> = {
       p2: "Every piece is one of a kind, made for collectors and passionate families — a handmade process built on skill, patience, and a lot of care.",
       p3: "Besides our online store, you can meet our dolls in person at our physical store in Shopping Iguatemi Esplanada (Sorocaba, Brazil), and follow along on Instagram",
     },
+    location: {
+      kicker: "Visit us",
+      title: "Come see us in person",
+      text: "Our physical store is inside Shopping Iguatemi Esplanada, in Sorocaba, Brazil — come meet our reborn dolls in person.",
+      addressLabel: "Address",
+      phoneLabel: "Phone / WhatsApp",
+      directions: "Get directions on Google Maps",
+      call: "Message us on WhatsApp",
+    },
   },
   es: {
     nav: {
@@ -277,6 +304,15 @@ export const dictionaries: Record<Locale, Dictionary> = {
       p1: "Maternidade Encantada nació del sueño de transformar el amor por la maternidad en arte. Desde hace 15 años, creamos muñecas reborn hechas a mano, con técnicas de pintura en capas, cabello implantado hebra por hebra y detalles que aportan el realismo de un bebé de verdad.",
       p2: "Cada pieza es única, pensada para coleccionistas y familias apasionadas — un proceso artesanal que une técnica, paciencia y mucho cariño.",
       p3: "Además de la tienda online, puedes conocer nuestras muñecas en persona en nuestra tienda física en Shopping Iguatemi Esplanada (Sorocaba, Brasil), y seguir las novedades en Instagram",
+    },
+    location: {
+      kicker: "Visítanos",
+      title: "Ven a conocernos en persona",
+      text: "Nuestra tienda física está dentro del Shopping Iguatemi Esplanada, en Sorocaba, Brasil — ven a conocer nuestras muñecas reborn en persona.",
+      addressLabel: "Dirección",
+      phoneLabel: "Teléfono / WhatsApp",
+      directions: "Ver ruta en Google Maps",
+      call: "Escribir por WhatsApp",
     },
   },
 };

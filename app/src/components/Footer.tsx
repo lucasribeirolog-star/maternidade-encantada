@@ -48,7 +48,16 @@ export function Footer({ locale = "pt" }: { locale?: Locale }) {
           <div>
             <h5 className="text-xs tracking-wider uppercase text-cream/50 mb-4">{t.footer.visit}</h5>
             <ul className="space-y-2 text-sm">
-              <li>{t.footer.store}</li>
+              <li>
+                <a
+                  href="https://maps.app.goo.gl/GGfbzTLz1E1xHJAo9"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="hover:text-white"
+                >
+                  {t.footer.store}
+                </a>
+              </li>
               <li>
                 <a
                   href="https://www.instagram.com/maternidadeencantadaoficial/"
