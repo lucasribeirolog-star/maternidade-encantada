@@ -92,7 +92,9 @@ export function ProductDetailContent({
               </span>
             )}
           </div>
-          <p className="mt-6 max-w-[60ch] text-ink-soft">{product.description}</p>
+          <p className="mt-6 max-w-[60ch] whitespace-pre-line text-ink-soft">
+            {product.description}
+          </p>
 
           <form action={addToCartFormAction} className="mt-8 flex items-center gap-4">
             <input type="hidden" name="productId" value={product.id} />
