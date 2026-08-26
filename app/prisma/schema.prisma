@@ -30,7 +30,7 @@ model Product {
   featured    Boolean  @default(false)
   rating      Float    @default(5)
   reviewCount Int      @default(0)
-  tinySku     String?
+  tinyProductId Int?
   categoryId  String?
   category    Category? @relation(fields: [categoryId], references: [id])
   images      ProductImage[]

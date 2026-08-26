@@ -40,7 +40,7 @@ export async function createTinyOrder(order: OrderWithItems) {
     },
     itens: order.items.map((item) => ({
       item: {
-        codigo: item.product?.tinySku || undefined,
+        id_produto: item.product?.tinyProductId || undefined,
         descricao: item.nameSnapshot,
         unidade: "UN",
         quantidade: item.quantity,
@@ -52,7 +52,7 @@ export async function createTinyOrder(order: OrderWithItems) {
   const body = new URLSearchParams({
     token,
     formato: "JSON",
-    pedido: JSON.stringify(pedido),
+    pedido: JSON.stringify({ pedido }),
   });
 
   const res = await fetch(API_URL, {
@@ -62,7 +62,8 @@ export async function createTinyOrder(order: OrderWithItems) {
   });
 
   const data = await res.json();
-  const registro = data?.retorno?.registros?.[0]?.registro;
+  const registrosRaw = data?.retorno?.registros;
+  const registro = Array.isArray(registrosRaw) ? registrosRaw[0]?.registro : registrosRaw?.registro;
 
   if (data?.retorno?.status !== "OK" || !registro || registro.status !== "OK") {
     const erros = registro?.erros?.map((e: { erro: string }) => e.erro).join("; ");
