@@ -71,6 +71,10 @@ type Dictionary = {
     visit: string;
     store: string;
     rights: string;
+    payment: string;
+    shipping: string;
+    security: string;
+    sslBadge: string;
   };
   cookies: { text: string; policy: string; decline: string; accept: string };
   security: { ssl: string; data: string; handmade: string; support: string };
@@ -162,6 +166,10 @@ export const dictionaries: Record<Locale, Dictionary> = {
       visit: "Visite",
       store: "Shopping Iguatemi Esplanada, Sorocaba",
       rights: "Todos os direitos reservados.",
+      payment: "Pagamento",
+      shipping: "Envio",
+      security: "Segurança",
+      sslBadge: "Site seguro (SSL)",
     },
     cookies: {
       text: "Usamos um cookie técnico essencial para manter os itens do seu carrinho. Não usamos cookies de rastreamento ou publicidade. Saiba mais na nossa",
@@ -273,6 +281,10 @@ export const dictionaries: Record<Locale, Dictionary> = {
       visit: "Visit us",
       store: "Shopping Iguatemi Esplanada, Sorocaba, Brazil",
       rights: "All rights reserved.",
+      payment: "Payment",
+      shipping: "Shipping",
+      security: "Security",
+      sslBadge: "Secure site (SSL)",
     },
     cookies: {
       text: "We use one essential technical cookie to keep the items in your cart. We don't use tracking or advertising cookies. Learn more in our",
@@ -384,6 +396,10 @@ export const dictionaries: Record<Locale, Dictionary> = {
       visit: "Visítanos",
       store: "Shopping Iguatemi Esplanada, Sorocaba, Brasil",
       rights: "Todos los derechos reservados.",
+      payment: "Pago",
+      shipping: "Envío",
+      security: "Seguridad",
+      sslBadge: "Sitio seguro (SSL)",
     },
     cookies: {
       text: "Usamos una cookie técnica esencial para mantener los artículos de tu carrito. No usamos cookies de rastreo ni de publicidad. Más información en nuestra",

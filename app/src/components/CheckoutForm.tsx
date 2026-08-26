@@ -17,6 +17,36 @@ export function CheckoutForm() {
   const [shippingState, setShippingState] = useState<ShippingLookupResult | null>(null);
   const [selectedOption, setSelectedOption] = useState<ShippingOption | null>(null);
   const [formError, setFormError] = useState<string | null>(null);
+  const [cepLookupState, setCepLookupState] = useState<"idle" | "loading" | "error">("idle");
+
+  async function handleCepBlur(event: React.FocusEvent<HTMLInputElement>) {
+    const cep = event.target.value.replace(/\D/g, "");
+    if (cep.length !== 8) return;
+
+    setCepLookupState("loading");
+    try {
+      const res = await fetch(`https://viacep.com.br/ws/${cep}/json/`);
+      const data = await res.json();
+      if (data.erro) {
+        setCepLookupState("error");
+        return;
+      }
+
+      const form = formRef.current;
+      if (!form) return;
+      const setField = (name: string, value: string) => {
+        const el = form.elements.namedItem(name) as HTMLInputElement | null;
+        if (el && !el.value) el.value = value;
+      };
+      setField("shippingStreet", data.logradouro ?? "");
+      setField("shippingNeighborhood", data.bairro ?? "");
+      setField("shippingCity", data.localidade ?? "");
+      setField("shippingState", data.uf ?? "");
+      setCepLookupState("idle");
+    } catch {
+      setCepLookupState("error");
+    }
+  }
 
   function handleLookupShipping() {
     const zip = formRef.current?.elements.namedItem("shippingZip") as HTMLInputElement | null;
@@ -78,7 +108,14 @@ export function CheckoutForm() {
       <section>
         <h2 className="font-display text-lg font-semibold">Endereço de entrega</h2>
         <div className="mt-4 grid gap-4 sm:grid-cols-3">
-          <input name="shippingZip" required placeholder="CEP" className={inputClass} />
+          <input
+            name="shippingZip"
+            required
+            placeholder="CEP"
+            inputMode="numeric"
+            onBlur={handleCepBlur}
+            className={inputClass}
+          />
           <input name="shippingStreet" required placeholder="Rua" className={`${inputClass} sm:col-span-2`} />
           <input name="shippingNumber" required placeholder="Número" className={inputClass} />
           <input name="shippingComplement" placeholder="Complemento" className={inputClass} />
@@ -86,6 +123,14 @@ export function CheckoutForm() {
           <input name="shippingCity" required placeholder="Cidade" className={inputClass} />
           <input name="shippingState" required placeholder="UF" maxLength={2} className={inputClass} />
         </div>
+        {cepLookupState === "loading" && (
+          <p className="mt-2 text-xs text-ink-soft">Buscando endereço pelo CEP...</p>
+        )}
+        {cepLookupState === "error" && (
+          <p className="mt-2 text-xs text-rose-deep">
+            CEP não encontrado — preencha o endereço manualmente.
+          </p>
+        )}
         <button
           type="button"
           disabled={isPending}

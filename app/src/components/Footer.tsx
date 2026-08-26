@@ -1,6 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { Logo } from "./Logo";
+import { FooterTrustBadges } from "./FooterTrustBadges";
 import { dictionaries, LOCALE_PATHS, type Locale } from "@/lib/i18n";
 
 export function Footer({ locale = "pt" }: { locale?: Locale }) {
@@ -70,6 +71,16 @@ export function Footer({ locale = "pt" }: { locale?: Locale }) {
             </ul>
           </div>
         </div>
+
+        <div className="mt-10">
+          <FooterTrustBadges
+            paymentLabel={t.footer.payment}
+            shippingLabel={t.footer.shipping}
+            securityLabel={t.footer.security}
+            sslLabel={t.footer.sslBadge}
+          />
+        </div>
+
         <p className="mt-10 text-center text-xs text-cream/40">
           © {new Date().getFullYear()} Maternidade Encantada. {t.footer.rights}
         </p>
