@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { getMercadoPagoPayment } from "@/lib/mercadoPago";
+import { syncOrderToTiny } from "@/lib/tiny";
 
 export async function POST(req: NextRequest) {
   const body = await req.json().catch(() => null);
@@ -26,6 +27,10 @@ export async function POST(req: NextRequest) {
       where: { id: orderId },
       data: { mpPaymentId: String(payment.id), mpStatus: payment.status, status: newStatus },
     });
+
+    if (newStatus === "paid") {
+      await syncOrderToTiny(orderId);
+    }
   } catch (err) {
     console.error("Erro ao processar webhook Mercado Pago:", err);
   }

@@ -30,6 +30,7 @@ model Product {
   featured    Boolean  @default(false)
   rating      Float    @default(5)
   reviewCount Int      @default(0)
+  tinyProductId Int?
   categoryId  String?
   category    Category? @relation(fields: [categoryId], references: [id])
   images      ProductImage[]
@@ -104,6 +105,10 @@ model Order {
   melhorEnvioShipmentId String?
   trackingCode          String?
 
+  tinyOrderId     Int?
+  tinyOrderNumber String?
+  tinySyncError   String?
+
   items OrderItem[]
 
   createdAt DateTime @default(now())
@@ -126,4 +131,15 @@ model AdminUser {
   email        String @unique
   passwordHash String
   createdAt    DateTime @default(now())
+}
+
+model TinyIntegration {
+  id           String   @id @default("singleton")
+  accessToken  String
+  refreshToken String
+  expiresAt    DateTime
+  vendedorId   Int?
+  depositoId   Int?
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
 }

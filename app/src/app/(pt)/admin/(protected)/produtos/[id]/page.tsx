@@ -112,6 +112,22 @@ export default async function EditarProdutoPage({ params }: Props) {
         </div>
 
         <div>
+          <label className="mb-1 block text-xs uppercase tracking-wide text-ink-soft">
+            Código do produto no Tiny (opcional)
+          </label>
+          <input
+            name="tinyProductId"
+            type="number"
+            defaultValue={product.tinyProductId ?? ""}
+            className={inputClass}
+          />
+          <p className="mt-1 text-xs text-ink-soft">
+            Preencha com o ID do produto no Tiny para esse item entrar automaticamente nos
+            pedidos sincronizados. Deixe em branco se ainda não existe no Tiny.
+          </p>
+        </div>
+
+        <div>
           <label className="mb-2 block text-xs uppercase tracking-wide text-ink-soft">
             Trocar foto principal
           </label>

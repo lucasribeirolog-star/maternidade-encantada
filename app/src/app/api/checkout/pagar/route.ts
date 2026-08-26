@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { createMercadoPagoPayment, MercadoPagoNotConfiguredError } from "@/lib/mercadoPago";
 import { getCartToken } from "@/lib/cart";
+import { syncOrderToTiny } from "@/lib/tiny";
 
 export async function POST(req: NextRequest) {
   const body = await req.json();
@@ -53,6 +54,7 @@ export async function POST(req: NextRequest) {
         const cart = await prisma.cart.findUnique({ where: { token: cartToken } });
         if (cart) await prisma.cartItem.deleteMany({ where: { cartId: cart.id } });
       }
+      await syncOrderToTiny(order.id);
     }
 
     return NextResponse.json({ status: payment.status });
