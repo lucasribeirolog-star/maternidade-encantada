@@ -48,6 +48,14 @@ type Dictionary = {
     stat2Label: string;
     stat3Label: string;
   };
+  artist: {
+    kicker: string;
+    name: string;
+    role: string;
+    p1: string;
+    p2: string;
+    quote: string;
+  };
   productsPage: { kicker: string; title: string; subtitle: string; empty: string };
   productDetail: { addToCart: string; weight: string; dimensions: string; reviews: string };
   footer: {
@@ -120,6 +128,14 @@ export const dictionaries: Record<Locale, Dictionary> = {
       stat2Value: "46,6 mil",
       stat2Label: "seguidores no Instagram",
       stat3Label: "feitas à mão",
+    },
+    artist: {
+      kicker: "A Artista",
+      name: "Gabriela Salomé",
+      role: "Fundadora e artista por trás da Maternidade Encantada",
+      p1: "Cada boneca reborn que sai do ateliê da Maternidade Encantada passa pelas mãos de Gabriela Salomé. Há 15 anos dedicada à Arte Reborn, ela domina cada etapa do processo: a pintura em camadas que dá vida ao tom de pele, o enraizamento fio a fio que cria os cabelos, e o acabamento cuidadoso que transforma silicone e vinil em algo que parece — e emociona — como um bebê de verdade.",
+      p2: "Mais do que uma técnica, para Gabriela a Arte Reborn é um jeito de traduzir em detalhes o amor pela maternidade. Cada encomenda é tratada como uma peça única, feita com a mesma dedicação de quem começou nesse ofício por paixão — e nunca parou de se encantar por ele.",
+      quote: "Cada boneca carrega um pouco de mim. É esse carinho que eu quero que chegue até você.",
     },
     productsPage: {
       kicker: "Coleção",
@@ -224,6 +240,14 @@ export const dictionaries: Record<Locale, Dictionary> = {
       stat2Label: "Instagram followers",
       stat3Label: "handmade",
     },
+    artist: {
+      kicker: "The Artist",
+      name: "Gabriela Salomé",
+      role: "Founder and artist behind Maternidade Encantada",
+      p1: "Every reborn doll that leaves the Maternidade Encantada atelier passes through Gabriela Salomé's hands. With 15 years dedicated to Reborn Art, she masters every step of the process: the layered painting that brings skin tone to life, the strand-by-strand hair rooting, and the careful finishing that turns silicone and vinyl into something that looks — and feels — like a real baby.",
+      p2: "For Gabriela, Reborn Art is more than a technique — it's a way of translating the love of motherhood into detail. Every order is treated as a one-of-a-kind piece, made with the same care as the day she first fell in love with this craft.",
+      quote: "Every doll carries a little piece of me. That's the care I want to reach you.",
+    },
     productsPage: {
       kicker: "Collection",
       title: "Reborn Dolls",
@@ -326,6 +350,14 @@ export const dictionaries: Record<Locale, Dictionary> = {
       stat2Value: "46,6 mil",
       stat2Label: "seguidores en Instagram",
       stat3Label: "hechas a mano",
+    },
+    artist: {
+      kicker: "La Artista",
+      name: "Gabriela Salomé",
+      role: "Fundadora y artista detrás de Maternidade Encantada",
+      p1: "Cada muñeca reborn que sale del atelier de Maternidade Encantada pasa por las manos de Gabriela Salomé. Con 15 años dedicados al Arte Reborn, domina cada etapa del proceso: la pintura en capas que da vida al tono de piel, el enraizado hebra por hebra del cabello, y el acabado cuidadoso que transforma silicona y vinilo en algo que parece — y emociona — como un bebé de verdad.",
+      p2: "Para Gabriela, el Arte Reborn es más que una técnica: es una forma de traducir en detalles el amor por la maternidad. Cada encargo se trata como una pieza única, hecha con el mismo cariño de quien empezó este oficio por pasión — y nunca dejó de encantarse con él.",
+      quote: "Cada muñeca lleva un poco de mí. Es ese cariño el que quiero que llegue hasta ti.",
     },
     productsPage: {
       kicker: "Colección",

@@ -115,6 +115,34 @@ export function HomeContent({ locale, featured }: { locale: Locale; featured: Pr
         </div>
       </section>
 
+      <section className="bg-cream-2 py-24">
+        <div className="mx-auto max-w-6xl px-6">
+          <div className="grid items-center gap-16 md:grid-cols-2">
+            <div>
+              <span className="mb-3 block text-xs tracking-[0.16em] uppercase text-rose-deep">
+                {t.artist.kicker}
+              </span>
+              <h2 className="text-3xl md:text-4xl font-semibold">{t.artist.name}</h2>
+              <p className="mt-2 text-sm text-ink-soft">{t.artist.role}</p>
+              <p className="mt-6 max-w-[52ch] text-ink-soft">{t.artist.p1}</p>
+              <p className="mt-4 max-w-[52ch] text-ink-soft">{t.artist.p2}</p>
+              <blockquote className="mt-8 border-l-2 border-rose-deep/40 pl-5 font-display text-lg italic text-wine">
+                “{t.artist.quote}”
+              </blockquote>
+            </div>
+            <div className="overflow-hidden rounded-2xl shadow-[0_20px_40px_-24px_rgba(62,39,35,0.35)] md:order-last">
+              <Image
+                src="/uploads/gabriela-salome.jpg"
+                alt={t.artist.name}
+                width={800}
+                height={1000}
+                className="aspect-[4/5] w-full object-cover"
+              />
+            </div>
+          </div>
+        </div>
+      </section>
+
       <StoreMap locale={locale} />
     </>
   );
