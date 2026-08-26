@@ -45,6 +45,7 @@ export function PaymentBrick({ orderId, totalReais, payerEmail }: Props) {
           paymentMethods: { creditCard: "all", debitCard: "all", pix: "all", ticket: "all" },
         },
         callbacks: {
+          onReady: () => {},
           onError: (brickError: unknown) => {
             setError("Não foi possível carregar o pagamento. Tente novamente.");
             console.error(brickError);
