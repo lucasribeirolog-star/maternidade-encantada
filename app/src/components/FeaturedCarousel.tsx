@@ -1,7 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
-import { formatCents } from "@/lib/money";
-import { LOCALE_PATHS, type Locale } from "@/lib/i18n";
+import { dictionaries, LOCALE_PATHS, type Locale } from "@/lib/i18n";
 
 type Product = {
   id: string;
@@ -21,6 +20,7 @@ export function FeaturedCarousel({
 }) {
   if (products.length === 0) return null;
 
+  const t = dictionaries[locale].showcase;
   const base = LOCALE_PATHS[locale] === "/" ? "" : LOCALE_PATHS[locale];
   const track = [...products, ...products];
 
@@ -48,13 +48,11 @@ export function FeaturedCarousel({
               </div>
               <div className="p-4">
                 <h3 className="font-display text-base font-semibold">{product.name}</h3>
-                <div className="mt-1 flex items-baseline gap-2">
-                  <span className="text-sm text-wine">{formatCents(product.priceCents)}</span>
-                  {product.compareAtPriceCents && (
-                    <span className="text-xs text-ink-soft line-through">
-                      {formatCents(product.compareAtPriceCents)}
-                    </span>
-                  )}
+                <div className="mt-1 flex items-center gap-1 text-sm font-semibold text-rose-deep">
+                  {t.viewOffer}
+                  <svg viewBox="0 0 24 24" className="h-4 w-4 fill-none stroke-current stroke-2 transition-transform group-hover:translate-x-0.5">
+                    <path d="M9 6l6 6-6 6" strokeLinecap="round" strokeLinejoin="round" />
+                  </svg>
                 </div>
               </div>
             </Link>

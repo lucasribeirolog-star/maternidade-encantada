@@ -38,7 +38,7 @@ type Dictionary = {
     title4: string;
     text4: string;
   };
-  showcase: { kicker: string; title: string; viewAll: string };
+  showcase: { kicker: string; title: string; viewAll: string; viewOffer: string };
   story: {
     kicker: string;
     title: string;
@@ -104,7 +104,12 @@ export const dictionaries: Record<Locale, Dictionary> = {
       title4: "Loja física em Sorocaba",
       text4: "Shopping Iguatemi Esplanada, Ala Norte, Sorocaba.",
     },
-    showcase: { kicker: "Vitrine", title: "Bonecas em destaque", viewAll: "Ver coleção completa" },
+    showcase: {
+      kicker: "Vitrine",
+      title: "Bonecas em destaque",
+      viewAll: "Ver coleção completa",
+      viewOffer: "Ver oferta!",
+    },
     story: {
       kicker: "Nossa história",
       title: "Arte que nasce do amor pela maternidade",
@@ -184,7 +189,12 @@ export const dictionaries: Record<Locale, Dictionary> = {
       title4: "Physical store at Iguatemi",
       text4: "Shopping Iguatemi Esplanada, North Wing, Sorocaba, Brazil.",
     },
-    showcase: { kicker: "Showcase", title: "Featured dolls", viewAll: "View full collection" },
+    showcase: {
+      kicker: "Showcase",
+      title: "Featured dolls",
+      viewAll: "View full collection",
+      viewOffer: "See offer!",
+    },
     story: {
       kicker: "Our Story",
       title: "Art born from the love of motherhood",
@@ -264,7 +274,12 @@ export const dictionaries: Record<Locale, Dictionary> = {
       title4: "Tienda física en Iguatemi",
       text4: "Shopping Iguatemi Esplanada, Ala Norte, Sorocaba, Brasil.",
     },
-    showcase: { kicker: "Vitrina", title: "Muñecas destacadas", viewAll: "Ver colección completa" },
+    showcase: {
+      kicker: "Vitrina",
+      title: "Muñecas destacadas",
+      viewAll: "Ver colección completa",
+      viewOffer: "¡Ver oferta!",
+    },
     story: {
       kicker: "Nuestra historia",
       title: "Arte que nace del amor por la maternidad",

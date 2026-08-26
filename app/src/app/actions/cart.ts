@@ -1,6 +1,7 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
+import { redirect } from "next/navigation";
 import { prisma } from "@/lib/prisma";
 import { ensureCart } from "@/lib/cart";
 
@@ -22,6 +23,7 @@ export async function addToCartFormAction(formData: FormData) {
   const quantity = Math.max(1, Number(formData.get("quantity") ?? 1));
   if (!productId) return;
   await addToCart(productId, quantity);
+  redirect("/carrinho");
 }
 
 export async function updateCartItemQuantity(itemId: string, quantity: number) {
