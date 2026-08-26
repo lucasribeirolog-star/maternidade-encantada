@@ -76,6 +76,42 @@ export default async function EditarProdutoPage({ params }: Props) {
         </div>
 
         <div>
+          <p className="mb-2 text-xs uppercase tracking-wide text-ink-soft">
+            Avaliação (mostrada nas estrelas do produto)
+          </p>
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <label className="mb-1 block text-xs text-ink-soft">Nota (0 a 5)</label>
+              <input
+                name="rating"
+                type="number"
+                step="0.1"
+                min="0"
+                max="5"
+                defaultValue={product.rating}
+                className={inputClass}
+              />
+            </div>
+            <div>
+              <label className="mb-1 block text-xs text-ink-soft">
+                Número de avaliações
+              </label>
+              <input
+                name="reviewCount"
+                type="number"
+                min="0"
+                defaultValue={product.reviewCount}
+                className={inputClass}
+              />
+            </div>
+          </div>
+          <p className="mt-1 text-xs text-ink-soft">
+            Novo produto começa com 5,0 estrelas e 0 avaliações (o contador de avaliações não
+            aparece até você preencher). Atualize aqui conforme forem chegando avaliações reais.
+          </p>
+        </div>
+
+        <div>
           <label className="mb-2 block text-xs uppercase tracking-wide text-ink-soft">
             Trocar foto principal
           </label>

@@ -49,7 +49,7 @@ type Dictionary = {
     stat3Label: string;
   };
   productsPage: { kicker: string; title: string; subtitle: string; empty: string };
-  productDetail: { addToCart: string; weight: string; dimensions: string };
+  productDetail: { addToCart: string; weight: string; dimensions: string; reviews: string };
   footer: {
     tagline: string;
     shop: string;
@@ -65,6 +65,8 @@ type Dictionary = {
     rights: string;
   };
   cookies: { text: string; policy: string; decline: string; accept: string };
+  security: { ssl: string; data: string; handmade: string; support: string };
+  wishlist: { title: string; empty: string; emptyCta: string; addedToast: string; navLabel: string };
   aboutPage: { kicker: string; title: string; p1: string; p2: string; p3: string };
   location: {
     kicker: string;
@@ -125,7 +127,12 @@ export const dictionaries: Record<Locale, Dictionary> = {
       subtitle: "Peças exclusivas, feitas à mão com realismo e carinho.",
       empty: "Nenhum produto cadastrado ainda.",
     },
-    productDetail: { addToCart: "Adicionar ao carrinho", weight: "Peso", dimensions: "Dimensões" },
+    productDetail: {
+      addToCart: "Adicionar ao carrinho",
+      weight: "Peso",
+      dimensions: "Dimensões",
+      reviews: "avaliações",
+    },
     footer: {
       tagline: "Bonecas reborn feitas à mão, com realismo e carinho.",
       shop: "Loja",
@@ -145,6 +152,19 @@ export const dictionaries: Record<Locale, Dictionary> = {
       policy: "Política de Privacidade",
       decline: "Recusar",
       accept: "Aceitar",
+    },
+    security: {
+      ssl: "Compra 100% segura (SSL)",
+      data: "Seus dados protegidos",
+      handmade: "Peça artesanal exclusiva",
+      support: "Atendimento via WhatsApp",
+    },
+    wishlist: {
+      title: "Minha Lista de Desejos",
+      empty: "Sua lista de desejos está vazia.",
+      emptyCta: "Ver bonecas",
+      addedToast: "Adicionado à lista de desejos",
+      navLabel: "Lista de desejos",
     },
     aboutPage: {
       kicker: "Nossa história",
@@ -210,7 +230,12 @@ export const dictionaries: Record<Locale, Dictionary> = {
       subtitle: "Exclusive pieces, handmade with realism and care.",
       empty: "No products yet.",
     },
-    productDetail: { addToCart: "Add to cart", weight: "Weight", dimensions: "Dimensions" },
+    productDetail: {
+      addToCart: "Add to cart",
+      weight: "Weight",
+      dimensions: "Dimensions",
+      reviews: "reviews",
+    },
     footer: {
       tagline: "Handmade reborn dolls, made with realism and care.",
       shop: "Shop",
@@ -230,6 +255,19 @@ export const dictionaries: Record<Locale, Dictionary> = {
       policy: "Privacy Policy",
       decline: "Decline",
       accept: "Accept",
+    },
+    security: {
+      ssl: "100% secure checkout (SSL)",
+      data: "Your data is protected",
+      handmade: "Exclusive handmade piece",
+      support: "Support via WhatsApp",
+    },
+    wishlist: {
+      title: "My Wishlist",
+      empty: "Your wishlist is empty.",
+      emptyCta: "Browse dolls",
+      addedToast: "Added to wishlist",
+      navLabel: "Wishlist",
     },
     aboutPage: {
       kicker: "Our Story",
@@ -295,7 +333,12 @@ export const dictionaries: Record<Locale, Dictionary> = {
       subtitle: "Piezas exclusivas, hechas a mano con realismo y cariño.",
       empty: "Aún no hay productos.",
     },
-    productDetail: { addToCart: "Añadir al carrito", weight: "Peso", dimensions: "Dimensiones" },
+    productDetail: {
+      addToCart: "Añadir al carrito",
+      weight: "Peso",
+      dimensions: "Dimensiones",
+      reviews: "reseñas",
+    },
     footer: {
       tagline: "Muñecas reborn hechas a mano, con realismo y cariño.",
       shop: "Tienda",
@@ -315,6 +358,19 @@ export const dictionaries: Record<Locale, Dictionary> = {
       policy: "Política de Privacidad",
       decline: "Rechazar",
       accept: "Aceptar",
+    },
+    security: {
+      ssl: "Compra 100% segura (SSL)",
+      data: "Tus datos están protegidos",
+      handmade: "Pieza artesanal exclusiva",
+      support: "Atención por WhatsApp",
+    },
+    wishlist: {
+      title: "Mi Lista de Deseos",
+      empty: "Tu lista de deseos está vacía.",
+      emptyCta: "Ver muñecas",
+      addedToast: "Añadido a la lista de deseos",
+      navLabel: "Lista de deseos",
     },
     aboutPage: {
       kicker: "Nuestra historia",

@@ -85,6 +85,8 @@ export async function updateProduct(productId: string, formData: FormData) {
   const lengthCm = Number(formData.get("lengthCm") ?? 20);
   const featured = formData.get("featured") === "on";
   const active = formData.get("active") === "on";
+  const rating = Math.max(0, Math.min(5, Number(formData.get("rating") ?? 5)));
+  const reviewCount = Math.max(0, Number(formData.get("reviewCount") ?? 0));
   const imageFile = formData.get("image") as File | null;
 
   const imageUrl = imageFile ? await saveUploadedImage(imageFile) : null;
@@ -102,6 +104,8 @@ export async function updateProduct(productId: string, formData: FormData) {
       lengthCm,
       featured,
       active,
+      rating,
+      reviewCount,
       ...(imageUrl
         ? { images: { create: [{ url: imageUrl, alt: name, position: 0 }] } }
         : {}),

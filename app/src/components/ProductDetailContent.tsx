@@ -3,6 +3,9 @@ import { btnClass } from "@/lib/ui";
 import { addToCartFormAction } from "@/app/actions/cart";
 import { dictionaries, type Locale } from "@/lib/i18n";
 import { ProductGallery } from "./ProductGallery";
+import { StarRating } from "./StarRating";
+import { WishlistButton } from "./WishlistButton";
+import { SecurityBadges } from "./SecurityBadges";
 
 type ProductDetail = {
   id: string;
@@ -16,6 +19,8 @@ type ProductDetail = {
   widthCm: number;
   lengthCm: number;
   active: boolean;
+  rating: number;
+  reviewCount: number;
   images: { url: string; alt: string }[];
   category: { name: string } | null;
 };
@@ -58,18 +63,45 @@ export function ProductDetailContent({
                 : "https://schema.org/OutOfStock",
               seller: { "@type": "Organization", name: "Maternidade Encantada" },
             },
+            ...(product.reviewCount > 0
+              ? {
+                  aggregateRating: {
+                    "@type": "AggregateRating",
+                    ratingValue: product.rating,
+                    reviewCount: product.reviewCount,
+                  },
+                }
+              : {}),
           }),
         }}
       />
       <div className="grid gap-14 md:grid-cols-2">
         <ProductGallery images={product.images} productName={product.name} />
         <div>
-          {product.category && (
-            <span className="mb-2 block text-xs tracking-[0.16em] uppercase text-rose-deep">
-              {product.category.name}
-            </span>
-          )}
-          <h1 className="text-3xl font-semibold">{product.name}</h1>
+          <div className="flex items-start justify-between gap-4">
+            <div>
+              {product.category && (
+                <span className="mb-2 block text-xs tracking-[0.16em] uppercase text-rose-deep">
+                  {product.category.name}
+                </span>
+              )}
+              <h1 className="text-3xl font-semibold">{product.name}</h1>
+            </div>
+            <WishlistButton
+              productId={product.id}
+              className="mt-1 flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-cream-2 text-ink-soft hover:text-rose"
+            />
+          </div>
+          <div className="mt-2">
+            <StarRating
+              rating={product.rating}
+              count={
+                product.reviewCount > 0
+                  ? `(${product.reviewCount} ${t.reviews})`
+                  : undefined
+              }
+            />
+          </div>
           <div className="mt-3 flex items-baseline gap-3">
             <span className="text-2xl text-wine font-display">
               {formatCents(product.priceCents)}
@@ -102,7 +134,11 @@ export function ProductDetailContent({
             </button>
           </form>
 
-          <dl className="mt-10 grid grid-cols-2 gap-4 border-t border-line pt-6 text-sm text-ink-soft">
+          <div className="mt-8">
+            <SecurityBadges locale={locale} />
+          </div>
+
+          <dl className="mt-8 grid grid-cols-2 gap-4 border-t border-line pt-6 text-sm text-ink-soft">
             <div>
               <dt className="text-ink">{t.weight}</dt>
               <dd>{(product.weightGrams / 1000).toLocaleString(LOCALE_TAG[locale])} kg</dd>

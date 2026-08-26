@@ -7,6 +7,8 @@ type Product = {
   name: string;
   priceCents: number;
   compareAtPriceCents: number | null;
+  rating: number;
+  reviewCount: number;
   images: { url: string; alt: string }[];
 };
 

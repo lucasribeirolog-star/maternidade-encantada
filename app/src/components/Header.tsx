@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { Logo } from "./Logo";
 import { LanguageSwitcher } from "./LanguageSwitcher";
+import { WishlistNavIcon } from "./WishlistNavIcon";
 import { getCartWithItems, cartTotals } from "@/lib/cart";
 import { dictionaries, LOCALE_PATHS, type Locale } from "@/lib/i18n";
 
@@ -40,6 +41,9 @@ export async function Header({ locale = "pt" }: { locale?: Locale }) {
         <div className="flex items-center gap-5">
           <div className="hidden sm:block">
             <LanguageSwitcher locale={locale} />
+          </div>
+          <div className="hidden text-ink sm:block">
+            <WishlistNavIcon locale={locale} label={t.wishlist.navLabel} />
           </div>
           <Link href="/carrinho" className="relative shrink-0" aria-label={t.nav.cart}>
             <svg

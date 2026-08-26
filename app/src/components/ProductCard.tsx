@@ -2,12 +2,17 @@ import Image from "next/image";
 import Link from "next/link";
 import { formatCents } from "@/lib/money";
 import { LOCALE_PATHS, type Locale } from "@/lib/i18n";
+import { StarRating } from "./StarRating";
+import { WishlistButton } from "./WishlistButton";
 
 type ProductCardData = {
+  id: string;
   slug: string;
   name: string;
   priceCents: number;
   compareAtPriceCents: number | null;
+  rating: number;
+  reviewCount: number;
   images: { url: string; alt: string }[];
 };
 
@@ -24,8 +29,12 @@ export function ProductCard({
   return (
     <Link
       href={`${base}/produtos/${product.slug}`}
-      className="group block overflow-hidden rounded-2xl bg-white shadow-[0_20px_40px_-28px_rgba(62,39,35,0.35)]"
+      className="group relative block overflow-hidden rounded-2xl bg-white shadow-[0_20px_40px_-28px_rgba(62,39,35,0.35)]"
     >
+      <WishlistButton
+        productId={product.id}
+        className="absolute right-3 top-3 z-10 flex h-9 w-9 items-center justify-center rounded-full bg-white/90 text-ink-soft shadow hover:text-rose"
+      />
       <div className="aspect-square overflow-hidden bg-cream-2">
         {image ? (
           <Image
@@ -41,6 +50,12 @@ export function ProductCard({
       </div>
       <div className="p-4">
         <h3 className="font-display text-base font-semibold">{product.name}</h3>
+        <div className="mt-1">
+          <StarRating
+            rating={product.rating}
+            count={product.reviewCount > 0 ? `(${product.reviewCount})` : undefined}
+          />
+        </div>
         <div className="mt-1 flex items-baseline gap-2">
           <span className="text-sm text-wine">{formatCents(product.priceCents)}</span>
           {product.compareAtPriceCents && (

@@ -34,6 +34,7 @@ export function Footer({ locale = "pt" }: { locale?: Locale }) {
             <ul className="space-y-2 text-sm">
               <li><Link href={`${base}/produtos`} className="hover:text-white">{t.footer.products}</Link></li>
               <li><Link href="/carrinho" className="hover:text-white">{t.footer.cart}</Link></li>
+              <li><Link href={`${base}/lista-de-desejos`} className="hover:text-white">{t.wishlist.navLabel}</Link></li>
               <li><Link href={`${base}/sobre`} className="hover:text-white">{t.footer.story}</Link></li>
             </ul>
           </div>
