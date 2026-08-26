@@ -1,8 +1,8 @@
-import Image from "next/image";
 import { formatCents } from "@/lib/money";
 import { btnClass } from "@/lib/ui";
 import { addToCartFormAction } from "@/app/actions/cart";
 import { dictionaries, type Locale } from "@/lib/i18n";
+import { ProductGallery } from "./ProductGallery";
 
 type ProductDetail = {
   id: string;
@@ -32,7 +32,6 @@ export function ProductDetailContent({
   product: ProductDetail;
 }) {
   const t = dictionaries[locale].productDetail;
-  const mainImage = product.images[0];
   const productUrl = `${BASE_URL}${locale === "pt" ? "" : `/${locale}`}/produtos/${product.slug}`;
 
   return (
@@ -63,18 +62,7 @@ export function ProductDetailContent({
         }}
       />
       <div className="grid gap-14 md:grid-cols-2">
-        <div className="overflow-hidden rounded-2xl bg-cream-2 shadow-[0_20px_40px_-28px_rgba(62,39,35,0.35)]">
-          {mainImage && (
-            <Image
-              src={mainImage.url}
-              alt={mainImage.alt || product.name}
-              width={800}
-              height={800}
-              priority
-              className="aspect-square w-full object-cover"
-            />
-          )}
-        </div>
+        <ProductGallery images={product.images} productName={product.name} />
         <div>
           {product.category && (
             <span className="mb-2 block text-xs tracking-[0.16em] uppercase text-rose-deep">
