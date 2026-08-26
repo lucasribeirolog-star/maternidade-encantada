@@ -87,8 +87,7 @@ export async function updateProduct(productId: string, formData: FormData) {
   const active = formData.get("active") === "on";
   const rating = Math.max(0, Math.min(5, Number(formData.get("rating") ?? 5)));
   const reviewCount = Math.max(0, Number(formData.get("reviewCount") ?? 0));
-  const tinyProductIdRaw = String(formData.get("tinyProductId") ?? "").trim();
-  const tinyProductId = tinyProductIdRaw ? Number(tinyProductIdRaw) : null;
+  const tinySku = String(formData.get("tinySku") ?? "").trim() || null;
   const imageFile = formData.get("image") as File | null;
 
   const imageUrl = imageFile ? await saveUploadedImage(imageFile) : null;
@@ -108,7 +107,7 @@ export async function updateProduct(productId: string, formData: FormData) {
       active,
       rating,
       reviewCount,
-      tinyProductId: tinyProductId && Number.isFinite(tinyProductId) ? tinyProductId : null,
+      tinySku,
       ...(imageUrl
         ? { images: { create: [{ url: imageUrl, alt: name, position: 0 }] } }
         : {}),

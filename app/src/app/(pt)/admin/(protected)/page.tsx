@@ -2,12 +2,9 @@ import Link from "next/link";
 import { prisma } from "@/lib/prisma";
 import { formatCents } from "@/lib/money";
 import { isMercadoPagoConfigured, isMelhorEnvioConfigured } from "@/lib/mercadoPago";
-import { isTinyConfigured, isTinyConnected } from "@/lib/tiny";
+import { isTinyConfigured } from "@/lib/tiny";
 
-type Props = { searchParams: Promise<{ tinyError?: string; tinyConnected?: string }> };
-
-export default async function AdminDashboardPage({ searchParams }: Props) {
-  const params = await searchParams;
+export default async function AdminDashboardPage() {
   const [productCount, pendingOrders, paidOrders, revenue] = await Promise.all([
     prisma.product.count({ where: { active: true } }),
     prisma.order.count({ where: { status: "pending" } }),
@@ -17,36 +14,19 @@ export default async function AdminDashboardPage({ searchParams }: Props) {
 
   const mpOk = isMercadoPagoConfigured();
   const meOk = isMelhorEnvioConfigured();
-  const tinyEnvOk = isTinyConfigured();
-  const tinyConnected = tinyEnvOk && (await isTinyConnected());
+  const tinyOk = isTinyConfigured();
 
   return (
     <div>
       <h1 className="text-2xl font-semibold">Painel</h1>
 
-      {params.tinyError && (
-        <div className="mt-6 rounded-xl border border-rose-deep bg-rose/10 p-4 text-sm text-rose-deep">
-          {params.tinyError}
-        </div>
-      )}
-      {params.tinyConnected && (
-        <div className="mt-6 rounded-xl border border-emerald-600 bg-emerald-50 p-4 text-sm text-emerald-700">
-          Tiny conectado com sucesso. <Link href="/admin/tiny" className="underline">Configure vendedor e depósito</Link>.
-        </div>
-      )}
-
-      {(!mpOk || !meOk || !tinyConnected) && (
+      {(!mpOk || !meOk || !tinyOk) && (
         <div className="mt-6 rounded-xl border border-gold-soft bg-gold-soft/40 p-4 text-sm">
           <p className="font-medium">Integrações pendentes</p>
           <ul className="mt-2 list-inside list-disc text-ink-soft">
             {!mpOk && <li>Mercado Pago — configure MERCADOPAGO_ACCESS_TOKEN e NEXT_PUBLIC_MERCADOPAGO_PUBLIC_KEY</li>}
             {!meOk && <li>Melhor Envio — configure MELHOR_ENVIO_TOKEN e MELHOR_ENVIO_FROM_ZIP</li>}
-            {!tinyEnvOk && <li>Tiny — configure TINY_CLIENT_ID, TINY_CLIENT_SECRET e TINY_REDIRECT_URI</li>}
-            {tinyEnvOk && !tinyConnected && (
-              <li>
-                Tiny — <a href="/api/tiny/connect" className="underline">conecte sua conta</a>
-              </li>
-            )}
+            {!tinyOk && <li>Tiny — configure TINY_API_TOKEN</li>}
           </ul>
         </div>
       )}
@@ -78,9 +58,6 @@ export default async function AdminDashboardPage({ searchParams }: Props) {
         </Link>
         <Link href="/admin/pedidos" className="text-rose-deep underline">
           Ver pedidos
-        </Link>
-        <Link href="/admin/tiny" className="text-rose-deep underline">
-          Tiny ERP
         </Link>
       </div>
     </div>

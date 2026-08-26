@@ -30,7 +30,7 @@ model Product {
   featured    Boolean  @default(false)
   rating      Float    @default(5)
   reviewCount Int      @default(0)
-  tinyProductId Int?
+  tinySku     String?
   categoryId  String?
   category    Category? @relation(fields: [categoryId], references: [id])
   images      ProductImage[]
@@ -133,13 +133,3 @@ model AdminUser {
   createdAt    DateTime @default(now())
 }
 
-model TinyIntegration {
-  id           String   @id @default("singleton")
-  accessToken  String
-  refreshToken String
-  expiresAt    DateTime
-  vendedorId   Int?
-  depositoId   Int?
-  createdAt    DateTime @default(now())
-  updatedAt    DateTime @updatedAt
-}

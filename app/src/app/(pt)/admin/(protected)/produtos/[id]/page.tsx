@@ -113,17 +113,18 @@ export default async function EditarProdutoPage({ params }: Props) {
 
         <div>
           <label className="mb-1 block text-xs uppercase tracking-wide text-ink-soft">
-            Código do produto no Tiny (opcional)
+            Código (SKU) do produto no Tiny (opcional)
           </label>
           <input
-            name="tinyProductId"
-            type="number"
-            defaultValue={product.tinyProductId ?? ""}
+            name="tinySku"
+            type="text"
+            defaultValue={product.tinySku ?? ""}
             className={inputClass}
           />
           <p className="mt-1 text-xs text-ink-soft">
-            Preencha com o ID do produto no Tiny para esse item entrar automaticamente nos
-            pedidos sincronizados. Deixe em branco se ainda não existe no Tiny.
+            Se preenchido, os pedidos sincronizados com o Tiny vinculam esse item ao produto
+            correspondente pelo código. Deixe em branco se ainda não existe no Tiny — o pedido
+            ainda é enviado, só não fica associado a um produto do catálogo de lá.
           </p>
         </div>
 
