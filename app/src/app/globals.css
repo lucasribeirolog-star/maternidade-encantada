@@ -2,6 +2,7 @@
 @import "tailwindcss";
 
 :root {
+  color-scheme: light;
   --cream: #FDF6F1;
   --cream-2: #F7E6E0;
   --ink: #3E2723;
@@ -30,6 +31,10 @@
   --font-display: "Playfair Display", Georgia, serif;
   --font-body: "Jost", ui-sans-serif, system-ui, sans-serif;
   --font-script: "Alex Brush", cursive;
+}
+
+html {
+  background: var(--cream);
 }
 
 body {

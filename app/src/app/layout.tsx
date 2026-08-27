@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { headers } from "next/headers";
 import "./globals.css";
 import { ContactFloatingButtons } from "@/components/ContactFloatingButtons";
@@ -34,6 +34,11 @@ export const metadata: Metadata = {
     description: "Bonecas reborn feitas à mão em Sorocaba, com realismo e carinho, há 15 anos.",
     images: ["/logo.jpg"],
   },
+};
+
+export const viewport: Viewport = {
+  colorScheme: "light",
+  themeColor: "#FDF6F1",
 };
 
 const HTML_LANG: Record<string, string> = { pt: "pt-BR", en: "en", es: "es" };
