@@ -42,6 +42,24 @@ export default async function NovoProdutoPage() {
         </div>
 
         <div>
+          <label className="mb-1 block text-xs uppercase tracking-wide text-ink-soft">
+            Preço original (opcional — para promoção)
+          </label>
+          <input
+            name="compareAtPrice"
+            type="number"
+            step="0.01"
+            min="0"
+            placeholder="Ex: 259.00"
+            className={inputClass}
+          />
+          <p className="mt-1 text-xs text-ink-soft">
+            Se preenchido, aparece riscado ao lado do preço atual, indicando promoção. Deixe em
+            branco se o produto não estiver em promoção.
+          </p>
+        </div>
+
+        <div>
           <p className="mb-2 text-xs uppercase tracking-wide text-ink-soft">
             Peso e dimensões (usados no cálculo de frete)
           </p>
