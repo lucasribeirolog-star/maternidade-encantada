@@ -1,9 +1,11 @@
+import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
 import { prisma } from "@/lib/prisma";
 import { formatCents } from "@/lib/money";
 import { btnClass } from "@/lib/ui";
+import { PixCopyButton } from "@/components/PixCopyButton";
 
 export const metadata: Metadata = { title: "Confirmação do pedido" };
 
@@ -26,14 +28,42 @@ export default async function ConfirmacaoPage({ params }: Props) {
   if (!order) notFound();
 
   const status = STATUS_LABEL[order.status] ?? STATUS_LABEL.pending;
+  const showPix = order.status === "pending" && order.mpPixQrCode && order.mpPixQrCodeBase64;
 
   return (
     <div className="mx-auto max-w-2xl px-6 py-16 text-center">
       <span className={`text-sm font-medium ${status.tone}`}>{status.label}</span>
       <h1 className="mt-3 text-3xl font-semibold">Pedido {order.orderNumber}</h1>
-      <p className="mt-2 text-ink-soft">
-        Enviamos os detalhes para <strong>{order.customerEmail}</strong>.
-      </p>
+
+      {showPix && (
+        <div className="mt-8 rounded-2xl border border-line bg-white p-6 text-left">
+          <h2 className="text-center font-display text-lg font-semibold">
+            Pague com Pix para confirmar seu pedido
+          </h2>
+          <p className="mt-2 text-center text-sm text-ink-soft">
+            Escaneie o QR Code com o app do seu banco ou copie o código abaixo.
+          </p>
+          <div className="mt-5 flex justify-center">
+            <Image
+              src={`data:image/png;base64,${order.mpPixQrCodeBase64}`}
+              alt="QR Code Pix"
+              width={220}
+              height={220}
+              unoptimized
+              className="h-56 w-56 rounded-xl border border-line"
+            />
+          </div>
+          <div className="mt-5">
+            <PixCopyButton code={order.mpPixQrCode!} />
+          </div>
+          {order.mpPixExpiresAt && (
+            <p className="mt-3 text-center text-xs text-ink-soft">
+              Código válido até{" "}
+              {order.mpPixExpiresAt.toLocaleString("pt-BR", { dateStyle: "short", timeStyle: "short" })}
+            </p>
+          )}
+        </div>
+      )}
 
       <div className="mt-8 rounded-2xl bg-cream-2 p-6 text-left">
         <ul className="space-y-2 text-sm">

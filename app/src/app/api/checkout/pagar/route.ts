@@ -43,9 +43,18 @@ export async function POST(req: NextRequest) {
           ? "failed"
           : "pending";
 
+    const pixData = payment.point_of_interaction?.transaction_data;
+
     await prisma.order.update({
       where: { id: order.id },
-      data: { mpPaymentId: String(payment.id), mpStatus: payment.status, status: newStatus },
+      data: {
+        mpPaymentId: String(payment.id),
+        mpStatus: payment.status,
+        status: newStatus,
+        mpPixQrCode: pixData?.qr_code ?? null,
+        mpPixQrCodeBase64: pixData?.qr_code_base64 ?? null,
+        mpPixExpiresAt: payment.date_of_expiration ? new Date(payment.date_of_expiration) : null,
+      },
     });
 
     if (newStatus === "paid") {
@@ -57,7 +66,7 @@ export async function POST(req: NextRequest) {
       await syncOrderToTiny(order.id);
     }
 
-    return NextResponse.json({ status: payment.status });
+    return NextResponse.json({ status: payment.status, isPix: Boolean(pixData?.qr_code) });
   } catch (err) {
     if (err instanceof MercadoPagoNotConfiguredError) {
       return NextResponse.json({ error: err.message }, { status: 503 });

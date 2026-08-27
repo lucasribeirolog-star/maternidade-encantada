@@ -103,6 +103,9 @@ model Order {
 
   mpPaymentId String?
   mpStatus    String?
+  mpPixQrCode       String? @db.Text
+  mpPixQrCodeBase64 String? @db.Text
+  mpPixExpiresAt    DateTime?
 
   melhorEnvioShipmentId String?
   trackingCode          String?

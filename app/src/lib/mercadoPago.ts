@@ -62,7 +62,18 @@ export async function createMercadoPagoPayment(input: CreatePaymentInput) {
   if (!res.ok) {
     throw new Error(data?.message || `Erro ao criar pagamento (Mercado Pago): ${res.status}`);
   }
-  return data as { id: number; status: string; status_detail: string };
+  return data as {
+    id: number;
+    status: string;
+    status_detail: string;
+    date_of_expiration?: string;
+    point_of_interaction?: {
+      transaction_data?: {
+        qr_code?: string;
+        qr_code_base64?: string;
+      };
+    };
+  };
 }
 
 export async function getMercadoPagoPayment(paymentId: string) {
