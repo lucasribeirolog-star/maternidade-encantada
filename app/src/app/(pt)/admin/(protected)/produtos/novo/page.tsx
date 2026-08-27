@@ -22,23 +22,33 @@ export default async function NovoProdutoPage() {
           className={inputClass}
         />
         <div className="grid grid-cols-2 gap-4">
-          <input
-            name="price"
-            type="number"
-            step="0.01"
-            min="0"
-            required
-            placeholder="Preço (R$)"
-            className={inputClass}
-          />
-          <select name="categoryId" className={inputClass} defaultValue="">
-            <option value="">Sem categoria</option>
-            {categories.map((c) => (
-              <option key={c.id} value={c.id}>
-                {c.name}
-              </option>
-            ))}
-          </select>
+          <div>
+            <label className="mb-1 block text-xs uppercase tracking-wide text-ink-soft">
+              Preço (R$)
+            </label>
+            <input
+              name="price"
+              type="number"
+              step="0.01"
+              min="0"
+              required
+              placeholder="Ex: 169.00"
+              className={inputClass}
+            />
+          </div>
+          <div>
+            <label className="mb-1 block text-xs uppercase tracking-wide text-ink-soft">
+              Categoria
+            </label>
+            <select name="categoryId" className={inputClass} defaultValue="">
+              <option value="">Sem categoria</option>
+              {categories.map((c) => (
+                <option key={c.id} value={c.id}>
+                  {c.name}
+                </option>
+              ))}
+            </select>
+          </div>
         </div>
 
         <div>

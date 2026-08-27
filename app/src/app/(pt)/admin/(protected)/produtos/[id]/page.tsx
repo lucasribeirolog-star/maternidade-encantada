@@ -57,23 +57,33 @@ export default async function EditarProdutoPage({ params, searchParams }: Props)
           className={inputClass}
         />
         <div className="grid grid-cols-2 gap-4">
-          <input
-            name="price"
-            type="number"
-            step="0.01"
-            min="0"
-            required
-            defaultValue={(product.priceCents / 100).toFixed(2)}
-            className={inputClass}
-          />
-          <select name="categoryId" className={inputClass} defaultValue={product.categoryId ?? ""}>
-            <option value="">Sem categoria</option>
-            {categories.map((c) => (
-              <option key={c.id} value={c.id}>
-                {c.name}
-              </option>
-            ))}
-          </select>
+          <div>
+            <label className="mb-1 block text-xs uppercase tracking-wide text-ink-soft">
+              Preço (R$)
+            </label>
+            <input
+              name="price"
+              type="number"
+              step="0.01"
+              min="0"
+              required
+              defaultValue={(product.priceCents / 100).toFixed(2)}
+              className={inputClass}
+            />
+          </div>
+          <div>
+            <label className="mb-1 block text-xs uppercase tracking-wide text-ink-soft">
+              Categoria
+            </label>
+            <select name="categoryId" className={inputClass} defaultValue={product.categoryId ?? ""}>
+              <option value="">Sem categoria</option>
+              {categories.map((c) => (
+                <option key={c.id} value={c.id}>
+                  {c.name}
+                </option>
+              ))}
+            </select>
+          </div>
         </div>
 
         <div>
