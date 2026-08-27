@@ -42,7 +42,12 @@ export function PaymentBrick({ orderId, totalReais, payerEmail }: Props) {
       .create("payment", "payment-brick-container", {
         initialization: { amount: totalReais, payer: { email: payerEmail } },
         customization: {
-          paymentMethods: { creditCard: "all", debitCard: "all", pix: "all", ticket: "all" },
+          paymentMethods: {
+            creditCard: "all",
+            debitCard: "all",
+            bankTransfer: "all",
+            ticket: "all",
+          },
         },
         callbacks: {
           onReady: () => {},
