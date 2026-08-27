@@ -9,21 +9,23 @@ export function Footer({ locale = "pt" }: { locale?: Locale }) {
   const base = LOCALE_PATHS[locale] === "/" ? "" : LOCALE_PATHS[locale];
 
   return (
-    <footer className="relative mt-24 overflow-hidden text-cream/90">
-      <Image
-        src="/footer-bg.jpg"
-        alt=""
-        fill
-        className="object-cover"
-        sizes="100vw"
-      />
-      <div
-        className="absolute inset-0"
-        style={{
-          background:
-            "linear-gradient(180deg, rgba(63,27,39,.88) 0%, rgba(63,27,39,.94) 100%)",
-        }}
-      />
+    <footer className="relative mt-24 text-cream/90">
+      <div className="absolute inset-y-0 left-1/2 w-screen -translate-x-1/2 overflow-hidden">
+        <Image
+          src="/footer-bg.jpg"
+          alt=""
+          fill
+          className="object-cover"
+          sizes="100vw"
+        />
+        <div
+          className="absolute inset-0"
+          style={{
+            background:
+              "linear-gradient(180deg, rgba(63,27,39,.88) 0%, rgba(63,27,39,.94) 100%)",
+          }}
+        />
+      </div>
       <div className="relative max-w-6xl mx-auto px-6 pt-16 pb-10">
         <div className="grid grid-cols-2 md:grid-cols-4 gap-10 border-t border-white/10 pt-10">
           <div className="col-span-2 md:col-span-1">

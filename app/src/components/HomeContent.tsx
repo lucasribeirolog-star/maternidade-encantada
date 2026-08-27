@@ -20,21 +20,23 @@ export function HomeContent({ locale, featured }: { locale: Locale; featured: Pr
 
   return (
     <>
-      <section className="relative flex min-h-[78vh] items-center justify-center overflow-hidden">
-        <Image
-          src="/products/hero-boneca.jpg"
-          alt="Maternidade Encantada reborn doll"
-          fill
-          priority
-          className="object-cover object-[center_30%]"
-        />
-        <div
-          className="absolute inset-0"
-          style={{
-            background:
-              "linear-gradient(180deg, rgba(63,27,39,.32) 0%, rgba(63,27,39,.58) 100%)",
-          }}
-        />
+      <section className="relative flex min-h-[78vh] items-center justify-center">
+        <div className="absolute inset-y-0 left-1/2 w-screen -translate-x-1/2 overflow-hidden">
+          <Image
+            src="/products/hero-boneca.jpg"
+            alt="Maternidade Encantada reborn doll"
+            fill
+            priority
+            className="object-cover object-[center_30%]"
+          />
+          <div
+            className="absolute inset-0"
+            style={{
+              background:
+                "linear-gradient(180deg, rgba(63,27,39,.32) 0%, rgba(63,27,39,.58) 100%)",
+            }}
+          />
+        </div>
         <div className="relative z-10 max-w-xl px-6 text-center text-white">
           <span className="mb-4 block text-xs tracking-[0.16em] uppercase opacity-90">
             {t.hero.eyebrow}
