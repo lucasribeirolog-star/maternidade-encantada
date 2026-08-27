@@ -7,12 +7,13 @@ import { btnClass } from "@/lib/ui";
 const inputClass =
   "w-full rounded-xl border border-line bg-white px-4 py-3 text-sm outline-none focus:border-rose";
 
-type Props = { params: Promise<{ id: string }> };
+type Props = { params: Promise<{ id: string }>; searchParams: Promise<{ saved?: string }> };
 
-export default async function EditarProdutoPage({ params }: Props) {
+export default async function EditarProdutoPage({ params, searchParams }: Props) {
   const { id } = await params;
+  const { saved } = await searchParams;
   const [product, categories] = await Promise.all([
-    prisma.product.findUnique({ where: { id }, include: { images: true } }),
+    prisma.product.findUnique({ where: { id }, include: { images: { orderBy: { position: "asc" } } } }),
     prisma.category.findMany({ orderBy: { position: "asc" } }),
   ]);
   if (!product) notFound();
@@ -25,14 +26,25 @@ export default async function EditarProdutoPage({ params }: Props) {
     <div className="max-w-xl">
       <h1 className="text-2xl font-semibold">{product.name}</h1>
 
-      {product.images[0] && (
-        <Image
-          src={product.images[0].url}
-          alt={product.name}
-          width={160}
-          height={160}
-          className="mt-4 h-32 w-32 rounded-xl object-cover"
-        />
+      {saved && (
+        <div className="mt-4 rounded-xl border border-emerald-600 bg-emerald-50 px-4 py-3 text-sm text-emerald-700">
+          Alterações salvas com sucesso!
+        </div>
+      )}
+
+      {product.images.length > 0 && (
+        <div className="mt-4 flex flex-wrap gap-3">
+          {product.images.map((img) => (
+            <Image
+              key={img.id}
+              src={img.url}
+              alt={product.name}
+              width={100}
+              height={100}
+              className="h-24 w-24 rounded-xl object-cover"
+            />
+          ))}
+        </div>
       )}
 
       <form action={updateWithId} className="mt-6 space-y-4">
@@ -174,6 +186,17 @@ export default async function EditarProdutoPage({ params }: Props) {
             Trocar foto principal
           </label>
           <input name="image" type="file" accept="image/*" className={inputClass} />
+        </div>
+
+        <div>
+          <label className="mb-2 block text-xs uppercase tracking-wide text-ink-soft">
+            Adicionar mais fotos à galeria
+          </label>
+          <input name="images" type="file" accept="image/*" multiple className={inputClass} />
+          <p className="mt-1 text-xs text-ink-soft">
+            Selecione uma ou mais fotos para adicionar à galeria do produto (não substitui as já
+            existentes).
+          </p>
         </div>
 
         <label className="flex items-center gap-2 text-sm">

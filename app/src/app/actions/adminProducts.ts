@@ -47,12 +47,21 @@ export async function createProduct(formData: FormData) {
   const lengthCm = Number(formData.get("lengthCm") ?? 20);
   const featured = formData.get("featured") === "on";
   const imageFile = formData.get("image") as File | null;
+  const galleryFiles = formData.getAll("images") as File[];
 
   if (!name || !description || !priceCents) {
     throw new Error("Preencha nome, descrição e preço.");
   }
 
   const imageUrl = imageFile ? await saveUploadedImage(imageFile) : null;
+  const galleryUrls = (
+    await Promise.all(galleryFiles.map((file) => saveUploadedImage(file)))
+  ).filter((url): url is string => Boolean(url));
+
+  const imagesToCreate = [
+    ...(imageUrl ? [{ url: imageUrl, alt: name, position: 0 }] : []),
+    ...galleryUrls.map((url, i) => ({ url, alt: name, position: i + 1 })),
+  ];
 
   const product = await prisma.product.create({
     data: {
@@ -67,13 +76,13 @@ export async function createProduct(formData: FormData) {
       widthCm,
       lengthCm,
       featured,
-      images: imageUrl ? { create: [{ url: imageUrl, alt: name, position: 0 }] } : undefined,
+      images: imagesToCreate.length > 0 ? { create: imagesToCreate } : undefined,
     },
   });
 
   revalidatePath("/admin/produtos");
   revalidatePath("/produtos");
-  redirect(`/admin/produtos/${product.id}`);
+  redirect(`/admin/produtos/${product.id}?saved=1`);
 }
 
 export async function updateProduct(productId: string, formData: FormData) {
@@ -96,8 +105,21 @@ export async function updateProduct(productId: string, formData: FormData) {
   const tinyProductIdRaw = String(formData.get("tinyProductId") ?? "").trim();
   const tinyProductId = tinyProductIdRaw ? Number(tinyProductIdRaw) : null;
   const imageFile = formData.get("image") as File | null;
+  const galleryFiles = formData.getAll("images") as File[];
 
   const imageUrl = imageFile ? await saveUploadedImage(imageFile) : null;
+  const galleryUrls = (
+    await Promise.all(galleryFiles.map((file) => saveUploadedImage(file)))
+  ).filter((url): url is string => Boolean(url));
+
+  let nextPosition = 0;
+  if (galleryUrls.length > 0) {
+    const lastImage = await prisma.productImage.findFirst({
+      where: { productId },
+      orderBy: { position: "desc" },
+    });
+    nextPosition = (lastImage?.position ?? -1) + 1;
+  }
 
   await prisma.product.update({
     where: { id: productId },
@@ -116,15 +138,21 @@ export async function updateProduct(productId: string, formData: FormData) {
       rating,
       reviewCount,
       tinyProductId: tinyProductId && Number.isFinite(tinyProductId) ? tinyProductId : null,
-      ...(imageUrl
-        ? { images: { create: [{ url: imageUrl, alt: name, position: 0 }] } }
-        : {}),
+      ...((imageUrl || galleryUrls.length > 0) && {
+        images: {
+          create: [
+            ...(imageUrl ? [{ url: imageUrl, alt: name, position: 0 }] : []),
+            ...galleryUrls.map((url, i) => ({ url, alt: name, position: nextPosition + i })),
+          ],
+        },
+      }),
     },
   });
 
   revalidatePath("/admin/produtos");
   revalidatePath("/produtos");
   revalidatePath(`/admin/produtos/${productId}`);
+  redirect(`/admin/produtos/${productId}?saved=1`);
 }
 
 export async function syncProductStock(productId: string) {

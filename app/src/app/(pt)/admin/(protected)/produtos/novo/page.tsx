@@ -78,6 +78,16 @@ export default async function NovoProdutoPage() {
           <input name="image" type="file" accept="image/*" className={inputClass} />
         </div>
 
+        <div>
+          <label className="mb-2 block text-xs uppercase tracking-wide text-ink-soft">
+            Demais fotos (galeria)
+          </label>
+          <input name="images" type="file" accept="image/*" multiple className={inputClass} />
+          <p className="mt-1 text-xs text-ink-soft">
+            Selecione uma ou mais fotos adicionais para a galeria do produto.
+          </p>
+        </div>
+
         <label className="flex items-center gap-2 text-sm">
           <input type="checkbox" name="featured" /> Mostrar na vitrine da home
         </label>
