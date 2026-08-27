@@ -13,6 +13,7 @@ type ProductCardData = {
   compareAtPriceCents: number | null;
   rating: number;
   reviewCount: number;
+  outOfStock?: boolean;
   images: { url: string; alt: string }[];
 };
 
@@ -35,17 +36,24 @@ export function ProductCard({
         productId={product.id}
         className="absolute right-3 top-3 z-10 flex h-9 w-9 items-center justify-center rounded-full bg-white/90 text-ink-soft shadow hover:text-rose"
       />
-      <div className="aspect-square overflow-hidden bg-cream-2">
+      <div className="relative aspect-square overflow-hidden bg-cream-2">
         {image ? (
           <Image
             src={image.url}
             alt={image.alt || product.name}
             width={600}
             height={600}
-            className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+            className={`h-full w-full object-cover transition-transform duration-500 group-hover:scale-105 ${
+              product.outOfStock ? "grayscale" : ""
+            }`}
           />
         ) : (
           <div className="h-full w-full" />
+        )}
+        {product.outOfStock && (
+          <span className="absolute left-3 top-3 rounded-full bg-ink/80 px-3 py-1 text-xs font-medium text-white">
+            Esgotado
+          </span>
         )}
       </div>
       <div className="p-4">

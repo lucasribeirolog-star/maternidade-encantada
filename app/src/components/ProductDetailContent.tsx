@@ -19,6 +19,7 @@ type ProductDetail = {
   widthCm: number;
   lengthCm: number;
   active: boolean;
+  outOfStock: boolean;
   rating: number;
   reviewCount: number;
   images: { url: string; alt: string }[];
@@ -58,9 +59,10 @@ export function ProductDetailContent({
               url: productUrl,
               priceCurrency: "BRL",
               price: (product.priceCents / 100).toFixed(2),
-              availability: product.active
-                ? "https://schema.org/InStock"
-                : "https://schema.org/OutOfStock",
+              availability:
+                product.active && !product.outOfStock
+                  ? "https://schema.org/InStock"
+                  : "https://schema.org/OutOfStock",
               seller: { "@type": "Organization", name: "Maternidade Encantada" },
             },
             ...(product.reviewCount > 0
@@ -116,23 +118,28 @@ export function ProductDetailContent({
             {product.description}
           </p>
 
-          <form action={addToCartFormAction} className="mt-8 flex items-center gap-4">
-            <input type="hidden" name="productId" value={product.id} />
-            <select
-              name="quantity"
-              defaultValue={1}
-              className="rounded-full border border-line bg-white px-4 py-3.5 text-sm"
-            >
-              {[1, 2, 3, 4, 5].map((n) => (
-                <option key={n} value={n}>
-                  {n}
-                </option>
-              ))}
-            </select>
-            <button type="submit" className={btnClass("primary")}>
-              {t.addToCart}
-            </button>
-          </form>
+          {product.outOfStock ? (
+            <div className="mt-8">
+              <span className="inline-block rounded-full bg-ink/80 px-4 py-2 text-sm font-medium text-white">
+                Esgotado
+              </span>
+              <p className="mt-2 text-xs text-ink-soft">
+                Essa peça já foi vendida. Confira outras bonecas disponíveis na coleção.
+              </p>
+            </div>
+          ) : (
+            <>
+              <form action={addToCartFormAction} className="mt-8 flex items-center gap-4">
+                <input type="hidden" name="productId" value={product.id} />
+                <button type="submit" className={btnClass("primary")}>
+                  {t.addToCart}
+                </button>
+              </form>
+              <p className="mt-2 text-xs text-ink-soft">
+                Peça artesanal única — apenas 1 unidade disponível.
+              </p>
+            </>
+          )}
 
           <div className="mt-8">
             <SecurityBadges locale={locale} />

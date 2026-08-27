@@ -1,7 +1,7 @@
 import Image from "next/image";
 import { notFound } from "next/navigation";
 import { prisma } from "@/lib/prisma";
-import { updateProduct, deleteProduct } from "@/app/actions/adminProducts";
+import { updateProduct, deleteProduct, syncProductStock } from "@/app/actions/adminProducts";
 import { btnClass } from "@/lib/ui";
 
 const inputClass =
@@ -19,6 +19,7 @@ export default async function EditarProdutoPage({ params }: Props) {
 
   const updateWithId = updateProduct.bind(null, product.id);
   const deleteWithId = deleteProduct.bind(null, product.id);
+  const syncStockWithId = syncProductStock.bind(null, product.id);
 
   return (
     <div className="max-w-xl">
@@ -127,6 +128,25 @@ export default async function EditarProdutoPage({ params }: Props) {
             produto com o mesmo código no Tiny). Deixe em branco se ainda não sabe o ID.
           </p>
         </div>
+
+        {product.tinyProductId && (
+          <div className="rounded-xl border border-line bg-cream-2 p-4">
+            <p className="text-xs uppercase tracking-wide text-ink-soft">Estoque no Tiny</p>
+            <p className="mt-1 text-sm font-medium">
+              {product.outOfStock ? "Esgotado" : "Disponível"}
+              {product.stockSyncedAt && (
+                <span className="ml-2 font-normal text-ink-soft">
+                  (verificado em {product.stockSyncedAt.toLocaleString("pt-BR")})
+                </span>
+              )}
+            </p>
+            <form action={syncStockWithId} className="mt-2">
+              <button type="submit" className="text-xs text-rose-deep underline">
+                Verificar agora
+              </button>
+            </form>
+          </div>
+        )}
 
         <div>
           <label className="mb-2 block text-xs uppercase tracking-wide text-ink-soft">

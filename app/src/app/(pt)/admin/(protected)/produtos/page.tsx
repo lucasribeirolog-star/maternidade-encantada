@@ -41,11 +41,18 @@ export default async function AdminProdutosPage() {
               <p className="font-medium">{product.name}</p>
               <p className="text-sm text-ink-soft">{formatCents(product.priceCents)}</p>
             </div>
-            {!product.active && (
-              <span className="rounded-full bg-cream-2 px-3 py-1 text-xs text-ink-soft">
-                Inativo
-              </span>
-            )}
+            <div className="flex shrink-0 gap-2">
+              {product.outOfStock && (
+                <span className="rounded-full bg-rose/15 px-3 py-1 text-xs text-rose-deep">
+                  Esgotado no Tiny
+                </span>
+              )}
+              {!product.active && (
+                <span className="rounded-full bg-cream-2 px-3 py-1 text-xs text-ink-soft">
+                  Inativo
+                </span>
+              )}
+            </div>
           </Link>
         ))}
         {products.length === 0 && (

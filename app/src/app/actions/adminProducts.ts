@@ -7,6 +7,7 @@ import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
 import { prisma } from "@/lib/prisma";
 import { requireAdmin } from "@/lib/adminGuard";
+import { getTinyStock } from "@/lib/tiny";
 
 function slugify(value: string) {
   return value
@@ -118,6 +119,25 @@ export async function updateProduct(productId: string, formData: FormData) {
   revalidatePath("/admin/produtos");
   revalidatePath("/produtos");
   revalidatePath(`/admin/produtos/${productId}`);
+}
+
+export async function syncProductStock(productId: string) {
+  await requireAdmin();
+
+  const product = await prisma.product.findUnique({ where: { id: productId } });
+  if (!product?.tinyProductId) return;
+
+  const saldo = await getTinyStock(product.tinyProductId);
+  if (saldo === null) return;
+
+  await prisma.product.update({
+    where: { id: productId },
+    data: { outOfStock: saldo <= 0, stockSyncedAt: new Date() },
+  });
+
+  revalidatePath("/admin/produtos");
+  revalidatePath(`/admin/produtos/${productId}`);
+  revalidatePath("/produtos");
 }
 
 export async function deleteProduct(productId: string) {

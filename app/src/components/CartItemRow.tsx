@@ -1,10 +1,10 @@
 "use client";
 
-import { useRef, useTransition } from "react";
+import { useTransition } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { formatCents } from "@/lib/money";
-import { updateCartItemQuantity, removeCartItem } from "@/app/actions/cart";
+import { removeCartItem } from "@/app/actions/cart";
 
 type Props = {
   item: {
@@ -21,7 +21,6 @@ type Props = {
 
 export function CartItemRow({ item }: Props) {
   const [isPending, startTransition] = useTransition();
-  const formRef = useRef<HTMLFormElement>(null);
   const image = item.product.images[0];
 
   return (
@@ -47,28 +46,8 @@ export function CartItemRow({ item }: Props) {
         </Link>
         <p className="mt-1 text-sm text-ink-soft">{formatCents(item.product.priceCents)}</p>
 
-        <form
-          ref={formRef}
-          className="mt-3 flex items-center gap-3"
-          action={(formData) =>
-            startTransition(async () => {
-              await updateCartItemQuantity(item.id, Number(formData.get("quantity")));
-            })
-          }
-        >
-          <select
-            name="quantity"
-            defaultValue={item.quantity}
-            disabled={isPending}
-            onChange={() => formRef.current?.requestSubmit()}
-            className="rounded-full border border-line bg-white px-3 py-2 text-sm"
-          >
-            {[1, 2, 3, 4, 5, 6, 7, 8].map((n) => (
-              <option key={n} value={n}>
-                {n}
-              </option>
-            ))}
-          </select>
+        <div className="mt-3 flex items-center gap-3">
+          <span className="text-xs text-ink-soft">Peça única · 1 unidade</span>
           <button
             type="button"
             disabled={isPending}
@@ -77,7 +56,7 @@ export function CartItemRow({ item }: Props) {
           >
             Remover
           </button>
-        </form>
+        </div>
       </div>
 
       <div className="font-display text-base font-semibold">

@@ -9,6 +9,7 @@ type Product = {
   compareAtPriceCents: number | null;
   rating: number;
   reviewCount: number;
+  outOfStock: boolean;
   images: { url: string; alt: string }[];
 };
 

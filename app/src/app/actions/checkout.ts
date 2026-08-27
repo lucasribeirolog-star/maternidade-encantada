@@ -3,6 +3,7 @@
 import { prisma } from "@/lib/prisma";
 import { getCartWithItems, cartTotals } from "@/lib/cart";
 import { calculateShipping, MelhorEnvioNotConfiguredError, type ShippingOption } from "@/lib/melhorEnvio";
+import { assertItemsInStock } from "@/lib/tiny";
 
 export type ShippingLookupResult =
   | { ok: true; options: ShippingOption[] }
@@ -61,6 +62,14 @@ export async function createOrder(input: CreateOrderInput) {
   if (items.length === 0) {
     throw new Error("Carrinho vazio.");
   }
+
+  await assertItemsInStock(
+    items.map((item) => ({
+      productId: item.productId,
+      name: item.product.name,
+      tinyProductId: item.product.tinyProductId,
+    }))
+  );
 
   const { subtotalCents } = cartTotals(cart);
   const totalCents = subtotalCents + input.shippingCostCents;
