@@ -51,7 +51,9 @@ export function ProductDetailContent({
             "@type": "Product",
             name: product.name,
             description: product.description,
-            image: product.images.map((img) => `${BASE_URL}${img.url}`),
+            image: product.images.map((img) =>
+              img.url.startsWith("http") ? img.url : `${BASE_URL}${img.url}`
+            ),
             url: productUrl,
             brand: { "@type": "Brand", name: "Maternidade Encantada" },
             offers: {
