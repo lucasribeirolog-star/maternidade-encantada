@@ -3,6 +3,7 @@ import { prisma } from "@/lib/prisma";
 import { formatCents } from "@/lib/money";
 import { isMercadoPagoConfigured, isMelhorEnvioConfigured } from "@/lib/mercadoPago";
 import { isTinyConfigured } from "@/lib/tiny";
+import { isEmailConfigured } from "@/lib/email";
 
 export default async function AdminDashboardPage() {
   const [productCount, pendingOrders, paidOrders, revenue] = await Promise.all([
@@ -15,18 +16,20 @@ export default async function AdminDashboardPage() {
   const mpOk = isMercadoPagoConfigured();
   const meOk = isMelhorEnvioConfigured();
   const tinyOk = isTinyConfigured();
+  const emailOk = isEmailConfigured();
 
   return (
     <div>
       <h1 className="text-2xl font-semibold">Painel</h1>
 
-      {(!mpOk || !meOk || !tinyOk) && (
+      {(!mpOk || !meOk || !tinyOk || !emailOk) && (
         <div className="mt-6 rounded-xl border border-gold-soft bg-gold-soft/40 p-4 text-sm">
           <p className="font-medium">Integrações pendentes</p>
           <ul className="mt-2 list-inside list-disc text-ink-soft">
             {!mpOk && <li>Mercado Pago — configure MERCADOPAGO_ACCESS_TOKEN e NEXT_PUBLIC_MERCADOPAGO_PUBLIC_KEY</li>}
             {!meOk && <li>Melhor Envio — configure MELHOR_ENVIO_TOKEN e MELHOR_ENVIO_FROM_ZIP</li>}
             {!tinyOk && <li>Tiny — configure TINY_API_TOKEN</li>}
+            {!emailOk && <li>E-mail — configure RESEND_API_KEY</li>}
           </ul>
         </div>
       )}

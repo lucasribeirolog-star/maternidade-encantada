@@ -3,6 +3,7 @@ import { prisma } from "@/lib/prisma";
 import { createMercadoPagoPayment, MercadoPagoNotConfiguredError } from "@/lib/mercadoPago";
 import { getCartToken } from "@/lib/cart";
 import { syncOrderToTiny } from "@/lib/tiny";
+import { sendOrderConfirmationEmail } from "@/lib/email";
 
 export async function POST(req: NextRequest) {
   const body = await req.json();
@@ -64,6 +65,11 @@ export async function POST(req: NextRequest) {
         if (cart) await prisma.cartItem.deleteMany({ where: { cartId: cart.id } });
       }
       await syncOrderToTiny(order.id);
+      const orderWithItems = await prisma.order.findUnique({
+        where: { id: order.id },
+        include: { items: true },
+      });
+      if (orderWithItems) await sendOrderConfirmationEmail(orderWithItems);
     }
 
     return NextResponse.json({ status: payment.status, isPix: Boolean(pixData?.qr_code) });

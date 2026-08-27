@@ -114,6 +114,9 @@ model Order {
   tinyOrderNumber String?
   tinySyncError   String?
 
+  confirmationEmailSentAt DateTime?
+  trackingEmailSentAt     DateTime?
+
   items OrderItem[]
 
   createdAt DateTime @default(now())

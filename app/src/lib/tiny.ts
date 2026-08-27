@@ -1,8 +1,10 @@
 import { prisma } from "@/lib/prisma";
+import { sendTrackingEmail } from "@/lib/email";
 import type { Order, OrderItem, Product } from "@prisma/client";
 
 const API_URL = "https://api.tiny.com.br/api2/pedido.incluir.php";
 const STOCK_URL = "https://api.tiny.com.br/api2/produto.obter.estoque.php";
+const PEDIDO_URL = "https://api.tiny.com.br/api2/pedido.obter.php";
 
 export class TinyNotConfiguredError extends Error {
   constructor() {
@@ -157,6 +159,51 @@ export async function syncAllProductStock() {
   }
 
   return { checked: products.length, outOfStock };
+}
+
+/**
+ * Verifica se pedidos pagos e sincronizados com o Tiny já ganharam código de
+ * rastreamento (etiqueta emitida). Quando encontra, salva no pedido e dispara
+ * o e-mail de rastreio pro cliente. Chamado periodicamente (cron).
+ */
+export async function syncOrderTracking() {
+  if (!isTinyConfigured()) return { checked: 0, updated: 0 };
+
+  const token = process.env.TINY_API_TOKEN!;
+  const orders = await prisma.order.findMany({
+    where: {
+      status: "paid",
+      tinyOrderId: { not: null },
+      trackingCode: null,
+    },
+    include: { items: true },
+  });
+
+  let updated = 0;
+  for (const order of orders) {
+    const body = new URLSearchParams({ token, formato: "JSON", id: String(order.tinyOrderId) });
+    const res = await fetch(PEDIDO_URL, {
+      method: "POST",
+      headers: { "Content-Type": "application/x-www-form-urlencoded" },
+      body,
+    });
+    const data = await res.json();
+    const trackingCode: string | null = data?.retorno?.pedido?.codigo_rastreamento || null;
+
+    if (trackingCode) {
+      const updatedOrder = await prisma.order.update({
+        where: { id: order.id },
+        data: { trackingCode },
+        include: { items: true },
+      });
+      await sendTrackingEmail(updatedOrder);
+      updated++;
+    }
+
+    await new Promise((resolve) => setTimeout(resolve, 350)); // evita rate limit da API do Tiny
+  }
+
+  return { checked: orders.length, updated };
 }
 
 function formatDateBr(date: Date) {

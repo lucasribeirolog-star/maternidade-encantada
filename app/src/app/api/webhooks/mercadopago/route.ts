@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { getMercadoPagoPayment } from "@/lib/mercadoPago";
 import { syncOrderToTiny } from "@/lib/tiny";
+import { sendOrderConfirmationEmail } from "@/lib/email";
 
 export async function POST(req: NextRequest) {
   const body = await req.json().catch(() => null);
@@ -30,6 +31,11 @@ export async function POST(req: NextRequest) {
 
     if (newStatus === "paid") {
       await syncOrderToTiny(orderId);
+      const orderWithItems = await prisma.order.findUnique({
+        where: { id: orderId },
+        include: { items: true },
+      });
+      if (orderWithItems) await sendOrderConfirmationEmail(orderWithItems);
     }
   } catch (err) {
     console.error("Erro ao processar webhook Mercado Pago:", err);
