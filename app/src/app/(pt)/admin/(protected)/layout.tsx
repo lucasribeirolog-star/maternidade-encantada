@@ -18,12 +18,17 @@ export default async function AdminLayout({ children }: { children: React.ReactN
   if (!email) redirect("/admin/login");
 
   return (
-    <div className="mx-auto flex min-h-[70vh] max-w-6xl gap-10 px-6 py-10">
-      <aside className="w-48 shrink-0">
-        <div className="mb-8">
-          <Logo size={64} />
+    <div className="mx-auto flex min-h-[70vh] w-full min-w-0 max-w-6xl flex-col gap-6 px-4 py-6 sm:px-6 md:flex-row md:gap-10 md:py-10">
+      <aside className="flex flex-col gap-3 border-b border-line pb-4 md:w-48 md:shrink-0 md:border-b-0 md:pb-0">
+        <div className="flex items-center justify-between gap-3">
+          <Logo size={48} />
+          <form action={adminLogout} className="md:hidden">
+            <button type="submit" className="text-xs whitespace-nowrap text-ink-soft underline hover:text-rose-deep">
+              Sair
+            </button>
+          </form>
         </div>
-        <nav className="space-y-1 text-sm">
+        <nav className="flex flex-wrap gap-1 text-sm md:mt-4 md:flex-col md:space-y-1">
           {NAV.map((item) => (
             <Link
               key={item.href}
@@ -34,13 +39,13 @@ export default async function AdminLayout({ children }: { children: React.ReactN
             </Link>
           ))}
         </nav>
-        <form action={adminLogout} className="mt-8">
-          <button type="submit" className="text-xs text-ink-soft underline hover:text-rose-deep">
+        <form action={adminLogout} className="hidden md:mt-8 md:block">
+          <button type="submit" className="text-xs whitespace-nowrap text-ink-soft underline hover:text-rose-deep">
             Sair ({email})
           </button>
         </form>
       </aside>
-      <div className="flex-1">{children}</div>
+      <div className="w-full min-w-0 flex-1">{children}</div>
     </div>
   );
 }

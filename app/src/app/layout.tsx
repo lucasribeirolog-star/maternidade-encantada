@@ -64,7 +64,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
 
   return (
     <html lang={HTML_LANG[locale] ?? "pt-BR"} className="h-full antialiased">
-      <body className="min-h-full flex flex-col bg-cream text-ink">
+      <body className="min-h-full flex flex-col overflow-x-hidden bg-cream text-ink">
         {children}
         <ContactFloatingButtons />
         <script

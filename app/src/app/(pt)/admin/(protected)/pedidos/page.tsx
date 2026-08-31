@@ -17,7 +17,7 @@ export default async function AdminPedidosPage() {
     <div>
       <h1 className="text-2xl font-semibold">Pedidos</h1>
 
-      <div className="mt-6 overflow-x-auto rounded-xl border border-line">
+      <div className="mt-6 max-w-full overflow-x-auto rounded-xl border border-line">
         <table className="w-full text-sm">
           <thead className="bg-cream-2 text-left text-xs uppercase text-ink-soft">
             <tr>

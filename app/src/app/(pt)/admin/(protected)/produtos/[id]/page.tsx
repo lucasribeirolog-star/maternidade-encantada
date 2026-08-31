@@ -111,7 +111,7 @@ export default async function EditarProdutoPage({ params, searchParams }: Props)
           <p className="mb-2 text-xs uppercase tracking-wide text-ink-soft">
             Peso e dimensões (usados no cálculo de frete)
           </p>
-          <div className="grid grid-cols-4 gap-3">
+          <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
             <input name="weightGrams" type="number" defaultValue={product.weightGrams} className={inputClass} />
             <input name="heightCm" type="number" defaultValue={product.heightCm} className={inputClass} />
             <input name="widthCm" type="number" defaultValue={product.widthCm} className={inputClass} />
