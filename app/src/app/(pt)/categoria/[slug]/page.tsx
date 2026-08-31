@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { prisma } from "@/lib/prisma";
 import { ProductCard } from "@/components/ProductCard";
+import { localeAlternates } from "@/lib/i18n";
 
 type Props = { params: Promise<{ slug: string }> };
 
@@ -15,7 +16,15 @@ async function getCategory(slug: string) {
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
   const category = await getCategory(slug);
-  return { title: category?.name ?? "Categoria" };
+  if (!category) return { title: "Categoria" };
+  return {
+    title: category.name,
+    description: `${category.name} — peças exclusivas da Maternidade Encantada, feitas à mão com realismo e carinho em Sorocaba.`,
+    alternates: {
+      canonical: `/categoria/${slug}`,
+      languages: localeAlternates(`/categoria/${slug}`),
+    },
+  };
 }
 
 export default async function CategoriaPage({ params }: Props) {

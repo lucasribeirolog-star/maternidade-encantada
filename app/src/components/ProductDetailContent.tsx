@@ -1,7 +1,8 @@
 import { formatCents } from "@/lib/money";
 import { btnClass } from "@/lib/ui";
 import { addToCartFormAction } from "@/app/actions/cart";
-import { dictionaries, type Locale } from "@/lib/i18n";
+import { dictionaries, LOCALE_PATHS, type Locale } from "@/lib/i18n";
+import { SITE_URL } from "@/lib/seo";
 import { ProductGallery } from "./ProductGallery";
 import { StarRating } from "./StarRating";
 import { WishlistButton } from "./WishlistButton";
@@ -26,7 +27,7 @@ type ProductDetail = {
   category: { name: string } | null;
 };
 
-const BASE_URL = "https://maternidadeencantada.com.br";
+const BASE_URL = SITE_URL;
 
 const LOCALE_TAG: Record<Locale, string> = { pt: "pt-BR", en: "en-US", es: "es-ES" };
 
@@ -38,19 +39,22 @@ export function ProductDetailContent({
   product: ProductDetail;
 }) {
   const t = dictionaries[locale].productDetail;
-  const productUrl = `${BASE_URL}${locale === "pt" ? "" : `/${locale}`}/produtos/${product.slug}`;
+  const localeBase = LOCALE_PATHS[locale] === "/" ? "" : LOCALE_PATHS[locale];
+  const productUrl = `${BASE_URL}${localeBase}/produtos/${product.slug}`;
+  const productsUrl = `${BASE_URL}${localeBase}/produtos`;
 
   return (
     <div className="mx-auto max-w-6xl px-6 py-16">
       <script
         type="application/ld+json"
-         
+
         dangerouslySetInnerHTML={{
           __html: JSON.stringify({
             "@context": "https://schema.org",
             "@type": "Product",
             name: product.name,
             description: product.description,
+            sku: product.id,
             image: product.images.map((img) =>
               img.url.startsWith("http") ? img.url : `${BASE_URL}${img.url}`
             ),
@@ -76,6 +80,21 @@ export function ProductDetailContent({
                   },
                 }
               : {}),
+          }),
+        }}
+      />
+      <script
+        type="application/ld+json"
+
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "BreadcrumbList",
+            itemListElement: [
+              { "@type": "ListItem", position: 1, name: "Maternidade Encantada", item: `${BASE_URL}${localeBase}` },
+              { "@type": "ListItem", position: 2, name: product.category?.name ?? "Bonecas", item: productsUrl },
+              { "@type": "ListItem", position: 3, name: product.name, item: productUrl },
+            ],
           }),
         }}
       />

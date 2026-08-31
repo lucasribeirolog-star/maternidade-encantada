@@ -2,9 +2,13 @@ import type { Metadata, Viewport } from "next";
 import { headers } from "next/headers";
 import "./globals.css";
 import { ContactFloatingButtons } from "@/components/ContactFloatingButtons";
+import { SITE_URL } from "@/lib/seo";
+
+const googleVerification = process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION;
+const bingVerification = process.env.NEXT_PUBLIC_BING_SITE_VERIFICATION;
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://maternidadeencantada.com.br"),
+  metadataBase: new URL(SITE_URL),
   title: {
     default: "Maternidade Encantada — Boneca Reborn em Sorocaba",
     template: "%s | Maternidade Encantada",
@@ -19,6 +23,17 @@ export const metadata: Metadata = {
     "maternidade encantada",
     "boneca bebe reborn",
   ],
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: { index: true, follow: true, "max-image-preview": "large" },
+  },
+  ...((googleVerification || bingVerification) && {
+    verification: {
+      ...(googleVerification && { google: googleVerification }),
+      ...(bingVerification && { other: { "msvalidate.01": bingVerification } }),
+    },
+  }),
   openGraph: {
     type: "website",
     siteName: "Maternidade Encantada",
@@ -54,19 +69,19 @@ export default async function RootLayout({ children }: { children: React.ReactNo
         <ContactFloatingButtons />
         <script
           type="application/ld+json"
-           
+
           dangerouslySetInnerHTML={{
             __html: JSON.stringify({
               "@context": "https://schema.org",
               "@type": "Store",
-              "@id": "https://maternidadeencantada.com.br/#store",
+              "@id": `${SITE_URL}/#store`,
               name: "Maternidade Encantada",
               alternateName: "Boneca Reborn Sorocaba",
               description:
                 "Loja de bonecas reborn feitas à mão, com realismo e carinho, há 15 anos.",
-              url: "https://maternidadeencantada.com.br",
-              image: "https://maternidadeencantada.com.br/logo.jpg",
-              logo: "https://maternidadeencantada.com.br/logo.jpg",
+              url: SITE_URL,
+              image: `${SITE_URL}/logo.jpg`,
+              logo: `${SITE_URL}/logo.jpg`,
               telephone: "+5511991352246",
               priceRange: "$$",
               address: {
@@ -83,6 +98,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
                 longitude: -47.4634434,
               },
               hasMap: "https://maps.app.goo.gl/GGfbzTLz1E1xHJAo9",
+              founder: { "@type": "Person", name: "Gabriela Salomé" },
               aggregateRating: {
                 "@type": "AggregateRating",
                 ratingValue: 4.8,
@@ -90,6 +106,21 @@ export default async function RootLayout({ children }: { children: React.ReactNo
               },
               areaServed: ["Sorocaba", "Brasil", "Internacional"],
               sameAs: ["https://www.instagram.com/maternidadeencantadaoficial/"],
+            }),
+          }}
+        />
+        <script
+          type="application/ld+json"
+
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              "@context": "https://schema.org",
+              "@type": "WebSite",
+              "@id": `${SITE_URL}/#website`,
+              name: "Maternidade Encantada",
+              url: SITE_URL,
+              inLanguage: "pt-BR",
+              publisher: { "@id": `${SITE_URL}/#store` },
             }),
           }}
         />

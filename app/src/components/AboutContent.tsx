@@ -2,6 +2,12 @@ import Image from "next/image";
 import { dictionaries, type Locale } from "@/lib/i18n";
 import { StoreMap } from "./StoreMap";
 
+const STORE_ALT: Record<Locale, string> = {
+  pt: "Loja física da Maternidade Encantada no Shopping Iguatemi Esplanada",
+  en: "Maternidade Encantada physical store at Shopping Iguatemi Esplanada",
+  es: "Tienda física de Maternidade Encantada en el Shopping Iguatemi Esplanada",
+};
+
 export function AboutContent({ locale }: { locale: Locale }) {
   const t = dictionaries[locale].aboutPage;
 
@@ -14,7 +20,7 @@ export function AboutContent({ locale }: { locale: Locale }) {
         <h1 className="text-3xl font-semibold md:text-4xl">{t.title}</h1>
         <Image
           src="/loja-fisica.jpg"
-          alt="Maternidade Encantada physical store at Shopping Iguatemi Esplanada"
+          alt={STORE_ALT[locale]}
           width={900}
           height={600}
           className="my-8 w-full rounded-2xl object-cover"

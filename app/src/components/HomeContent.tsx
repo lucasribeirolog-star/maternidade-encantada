@@ -14,6 +14,18 @@ type Product = {
   images: { url: string; alt: string }[];
 };
 
+const HERO_ALT: Record<Locale, string> = {
+  pt: "Boneca reborn Maternidade Encantada",
+  en: "Maternidade Encantada reborn doll",
+  es: "Muñeca reborn Maternidade Encantada",
+};
+
+const STORE_ALT: Record<Locale, string> = {
+  pt: "Loja física da Maternidade Encantada no Shopping Iguatemi Esplanada",
+  en: "Maternidade Encantada physical store at Shopping Iguatemi Esplanada",
+  es: "Tienda física de Maternidade Encantada en el Shopping Iguatemi Esplanada",
+};
+
 export function HomeContent({ locale, featured }: { locale: Locale; featured: Product[] }) {
   const t = dictionaries[locale];
   const base = LOCALE_PATHS[locale] === "/" ? "" : LOCALE_PATHS[locale];
@@ -24,7 +36,7 @@ export function HomeContent({ locale, featured }: { locale: Locale; featured: Pr
         <div className="absolute inset-y-0 left-1/2 w-screen -translate-x-1/2 overflow-hidden">
           <Image
             src="/products/hero-boneca.jpg"
-            alt="Maternidade Encantada reborn doll"
+            alt={HERO_ALT[locale]}
             fill
             priority
             className="object-cover object-[center_30%]"
@@ -87,7 +99,7 @@ export function HomeContent({ locale, featured }: { locale: Locale; featured: Pr
           <div className="overflow-hidden rounded-2xl shadow-[0_20px_40px_-24px_rgba(62,39,35,0.35)]">
             <Image
               src="/loja-fisica.jpg"
-              alt="Maternidade Encantada physical store at Shopping Iguatemi Esplanada"
+              alt={STORE_ALT[locale]}
               width={800}
               height={1000}
               className="aspect-[4/5] w-full object-cover"
