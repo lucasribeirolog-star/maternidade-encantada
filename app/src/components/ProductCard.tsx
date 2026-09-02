@@ -30,7 +30,7 @@ export function ProductCard({
   return (
     <Link
       href={`${base}/produtos/${product.slug}`}
-      className="group relative block overflow-hidden rounded-2xl bg-white shadow-[0_20px_40px_-28px_rgba(62,39,35,0.35)]"
+      className="group relative block overflow-hidden rounded-2xl bg-white shadow-[0_20px_40px_-28px_rgba(62,39,35,0.35)] transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_28px_48px_-24px_rgba(62,39,35,0.45)]"
     >
       <WishlistButton
         productId={product.id}
