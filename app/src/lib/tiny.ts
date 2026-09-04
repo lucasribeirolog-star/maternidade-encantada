@@ -5,6 +5,8 @@ import type { Order, OrderItem, Product } from "@prisma/client";
 const API_URL = "https://api.tiny.com.br/api2/pedido.incluir.php";
 const STOCK_URL = "https://api.tiny.com.br/api2/produto.obter.estoque.php";
 const PEDIDO_URL = "https://api.tiny.com.br/api2/pedido.obter.php";
+const PESQUISA_URL = "https://api.tiny.com.br/api2/produtos.pesquisa.php";
+const INCLUIR_PRODUTO_URL = "https://api.tiny.com.br/api2/produto.incluir.php";
 
 export class TinyNotConfiguredError extends Error {
   constructor() {
@@ -204,6 +206,88 @@ export async function syncOrderTracking() {
   }
 
   return { checked: orders.length, updated };
+}
+
+export type TinyProductMatch = { id: number; codigo: string; nome: string; situacao: string };
+
+/**
+ * Busca produtos no Tiny cujo código (SKU) bate exatamente com o informado.
+ * A busca do Tiny é por texto (nome ou código, parcial) — aqui filtramos
+ * só os resultados com código idêntico, pra evitar vincular ao produto errado.
+ */
+export async function searchTinyProductsByCode(codigo: string): Promise<TinyProductMatch[]> {
+  const token = process.env.TINY_API_TOKEN;
+  if (!token || !codigo.trim()) return [];
+
+  const body = new URLSearchParams({ token, formato: "JSON", pesquisa: codigo.trim() });
+  const res = await fetch(PESQUISA_URL, {
+    method: "POST",
+    headers: { "Content-Type": "application/x-www-form-urlencoded" },
+    body,
+  });
+
+  const data = await res.json();
+  const produtos = data?.retorno?.produtos;
+  if (!Array.isArray(produtos)) return [];
+
+  return produtos
+    .map((item: { produto: { id: string; codigo: string; nome: string; situacao: string } }) => item.produto)
+    .filter((p) => p.codigo === codigo.trim())
+    .map((p) => ({ id: Number(p.id), codigo: p.codigo, nome: p.nome, situacao: p.situacao }));
+}
+
+/** Cria um produto novo diretamente no Tiny (usado quando o produto ainda não existe lá). */
+export async function createTinyProduct(input: {
+  name: string;
+  priceCents: number;
+}): Promise<{ id: number; codigo: string }> {
+  const token = process.env.TINY_API_TOKEN;
+  if (!token) throw new TinyNotConfiguredError();
+
+  const produto = {
+    sequencia: "1",
+    nome: input.name,
+    unidade: "UN",
+    preco: (input.priceCents / 100).toFixed(2),
+    situacao: "A",
+    tipo: "P",
+    origem: "0",
+  };
+
+  const body = new URLSearchParams({
+    token,
+    formato: "JSON",
+    produto: JSON.stringify({ produtos: [{ produto }] }),
+  });
+
+  const res = await fetch(INCLUIR_PRODUTO_URL, {
+    method: "POST",
+    headers: { "Content-Type": "application/x-www-form-urlencoded" },
+    body,
+  });
+
+  const data = await res.json();
+  const registrosRaw = data?.retorno?.registros;
+  const registro = Array.isArray(registrosRaw) ? registrosRaw[0]?.registro : registrosRaw?.registro;
+
+  if (data?.retorno?.status !== "OK" || !registro || registro.status !== "OK") {
+    const erros = registro?.erros?.map((e: { erro: string }) => e.erro).join("; ");
+    throw new Error(erros || "Erro ao criar produto no Tiny.");
+  }
+
+  const newId = Number(registro.id);
+
+  // o Tiny não devolve o código (SKU) gerado na resposta de inclusão — busca o produto pra pegar
+  const obterBody = new URLSearchParams({ token, formato: "JSON", id: String(newId) });
+  const obterRes = await fetch("https://api.tiny.com.br/api2/produto.obter.php", {
+    method: "POST",
+    headers: { "Content-Type": "application/x-www-form-urlencoded" },
+    body: obterBody,
+  });
+  const obterData = await obterRes.json();
+  const codigo = obterData?.retorno?.produto?.codigo ?? "";
+
+  return { id: newId, codigo: String(codigo) };
 }
 
 function formatDateBr(date: Date) {

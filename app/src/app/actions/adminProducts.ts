@@ -7,7 +7,7 @@ import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
 import { prisma } from "@/lib/prisma";
 import { requireAdmin } from "@/lib/adminGuard";
-import { getTinyStock } from "@/lib/tiny";
+import { getTinyStock, searchTinyProductsByCode, createTinyProduct, isTinyConfigured } from "@/lib/tiny";
 
 function slugify(value: string) {
   return value
@@ -16,6 +16,75 @@ function slugify(value: string) {
     .replace(/[̀-ͯ]/g, "")
     .replace(/[^a-z0-9]+/g, "-")
     .replace(/(^-|-$)/g, "");
+}
+
+/**
+ * Resolve o vínculo com o Tiny a partir do que o admin preencheu no formulário:
+ * ou cria o produto direto no Tiny (createInTiny), ou busca pelo código/SKU
+ * informado. Nunca vincula "no chute" quando o código bate com mais de um
+ * produto — isso já causou pedido linkado ao item errado no passado.
+ */
+async function resolveTinyLink({
+  createInTiny,
+  tinyCodigo,
+  name,
+  priceCents,
+}: {
+  createInTiny: boolean;
+  tinyCodigo: string;
+  name: string;
+  priceCents: number;
+}): Promise<{
+  tinyProductId: number | null;
+  tinyCodigo: string | null;
+  outOfStock: boolean | null;
+  tinyError: string | null;
+}> {
+  if (!isTinyConfigured() || (!createInTiny && !tinyCodigo)) {
+    return { tinyProductId: null, tinyCodigo: null, outOfStock: null, tinyError: null };
+  }
+
+  try {
+    if (createInTiny) {
+      const created = await createTinyProduct({ name, priceCents });
+      return { tinyProductId: created.id, tinyCodigo: created.codigo || null, outOfStock: false, tinyError: null };
+    }
+
+    const matches = await searchTinyProductsByCode(tinyCodigo);
+    if (matches.length === 0) {
+      return {
+        tinyProductId: null,
+        tinyCodigo: null,
+        outOfStock: null,
+        tinyError: `Código "${tinyCodigo}" não encontrado no Tiny. Confira e tente novamente.`,
+      };
+    }
+    if (matches.length > 1) {
+      return {
+        tinyProductId: null,
+        tinyCodigo: null,
+        outOfStock: null,
+        tinyError: `Código "${tinyCodigo}" encontrado em mais de um produto no Tiny (${matches
+          .map((m) => m.nome)
+          .join(", ")}). Confira no Tiny e ajuste o código pra ser único, ou vincule manualmente.`,
+      };
+    }
+    const match = matches[0];
+    const saldo = await getTinyStock(match.id);
+    return {
+      tinyProductId: match.id,
+      tinyCodigo: match.codigo,
+      outOfStock: saldo !== null ? saldo <= 0 : null,
+      tinyError: null,
+    };
+  } catch (err) {
+    return {
+      tinyProductId: null,
+      tinyCodigo: null,
+      outOfStock: null,
+      tinyError: err instanceof Error ? err.message : "Erro ao vincular com o Tiny.",
+    };
+  }
 }
 
 async function saveUploadedImage(file: File): Promise<string | null> {
@@ -44,6 +113,8 @@ export async function createProduct(formData: FormData) {
   const featured = formData.get("featured") === "on";
   const imageFile = formData.get("image") as File | null;
   const galleryFiles = formData.getAll("images") as File[];
+  const createInTiny = formData.get("createInTiny") === "on";
+  const tinyCodigo = String(formData.get("tinyCodigo") ?? "").trim();
 
   if (!name || !description || !priceCents) {
     throw new Error("Preencha nome, descrição e preço.");
@@ -59,6 +130,8 @@ export async function createProduct(formData: FormData) {
     ...galleryUrls.map((url, i) => ({ url, alt: name, position: i + 1 })),
   ];
 
+  const tinyLink = await resolveTinyLink({ createInTiny, tinyCodigo, name, priceCents });
+
   const product = await prisma.product.create({
     data: {
       name,
@@ -68,6 +141,10 @@ export async function createProduct(formData: FormData) {
       compareAtPriceCents,
       categoryId,
       weightGrams,
+      tinyProductId: tinyLink.tinyProductId,
+      tinyCodigo: tinyLink.tinyCodigo,
+      outOfStock: tinyLink.outOfStock ?? false,
+      stockSyncedAt: tinyLink.tinyProductId ? new Date() : null,
       heightCm,
       widthCm,
       lengthCm,
@@ -78,7 +155,8 @@ export async function createProduct(formData: FormData) {
 
   revalidatePath("/admin/produtos");
   revalidatePath("/produtos");
-  redirect(`/admin/produtos/${product.id}?saved=1`);
+  const errorParam = tinyLink.tinyError ? `&tinyError=${encodeURIComponent(tinyLink.tinyError)}` : "";
+  redirect(`/admin/produtos/${product.id}?saved=1${errorParam}`);
 }
 
 export async function updateProduct(productId: string, formData: FormData) {
@@ -98,8 +176,8 @@ export async function updateProduct(productId: string, formData: FormData) {
   const active = formData.get("active") === "on";
   const rating = Math.max(0, Math.min(5, Number(formData.get("rating") ?? 5)));
   const reviewCount = Math.max(0, Number(formData.get("reviewCount") ?? 0));
-  const tinyProductIdRaw = String(formData.get("tinyProductId") ?? "").trim();
-  const tinyProductId = tinyProductIdRaw ? Number(tinyProductIdRaw) : null;
+  const createInTiny = formData.get("createInTiny") === "on";
+  const tinyCodigoInput = String(formData.get("tinyCodigo") ?? "").trim();
   const imageFile = formData.get("image") as File | null;
   const galleryFiles = formData.getAll("images") as File[];
 
@@ -115,6 +193,45 @@ export async function updateProduct(productId: string, formData: FormData) {
       orderBy: { position: "desc" },
     });
     nextPosition = (lastImage?.position ?? -1) + 1;
+  }
+
+  const existing = await prisma.product.findUnique({
+    where: { id: productId },
+    select: { tinyCodigo: true },
+  });
+
+  let tinyUpdate: {
+    tinyProductId?: number | null;
+    tinyCodigo?: string | null;
+    outOfStock?: boolean;
+    stockSyncedAt?: Date | null;
+  } = {};
+  let tinyError: string | null = null;
+
+  if (createInTiny) {
+    const link = await resolveTinyLink({ createInTiny: true, tinyCodigo: "", name, priceCents });
+    if (link.tinyError) tinyError = link.tinyError;
+    else {
+      tinyUpdate = {
+        tinyProductId: link.tinyProductId,
+        tinyCodigo: link.tinyCodigo,
+        outOfStock: link.outOfStock ?? false,
+        stockSyncedAt: new Date(),
+      };
+    }
+  } else if (tinyCodigoInput && tinyCodigoInput !== (existing?.tinyCodigo ?? "")) {
+    const link = await resolveTinyLink({ createInTiny: false, tinyCodigo: tinyCodigoInput, name, priceCents });
+    if (link.tinyError) tinyError = link.tinyError;
+    else {
+      tinyUpdate = {
+        tinyProductId: link.tinyProductId,
+        tinyCodigo: link.tinyCodigo,
+        outOfStock: link.outOfStock ?? false,
+        stockSyncedAt: new Date(),
+      };
+    }
+  } else if (!tinyCodigoInput && existing?.tinyCodigo) {
+    tinyUpdate = { tinyProductId: null, tinyCodigo: null };
   }
 
   await prisma.product.update({
@@ -133,7 +250,7 @@ export async function updateProduct(productId: string, formData: FormData) {
       active,
       rating,
       reviewCount,
-      tinyProductId: tinyProductId && Number.isFinite(tinyProductId) ? tinyProductId : null,
+      ...tinyUpdate,
       ...((imageUrl || galleryUrls.length > 0) && {
         images: {
           create: [
@@ -148,7 +265,8 @@ export async function updateProduct(productId: string, formData: FormData) {
   revalidatePath("/admin/produtos");
   revalidatePath("/produtos");
   revalidatePath(`/admin/produtos/${productId}`);
-  redirect(`/admin/produtos/${productId}?saved=1`);
+  const errorParam = tinyError ? `&tinyError=${encodeURIComponent(tinyError)}` : "";
+  redirect(`/admin/produtos/${productId}?saved=1${errorParam}`);
 }
 
 export async function syncProductStock(productId: string) {

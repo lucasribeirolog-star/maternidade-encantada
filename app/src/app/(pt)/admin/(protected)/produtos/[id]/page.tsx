@@ -3,20 +3,25 @@ import { notFound } from "next/navigation";
 import { prisma } from "@/lib/prisma";
 import { updateProduct, deleteProduct, syncProductStock } from "@/app/actions/adminProducts";
 import { btnClass } from "@/lib/ui";
+import { isTinyConfigured } from "@/lib/tiny";
 
 const inputClass =
   "w-full rounded-xl border border-line bg-white px-4 py-3 text-sm outline-none focus:border-rose";
 
-type Props = { params: Promise<{ id: string }>; searchParams: Promise<{ saved?: string }> };
+type Props = {
+  params: Promise<{ id: string }>;
+  searchParams: Promise<{ saved?: string; tinyError?: string }>;
+};
 
 export default async function EditarProdutoPage({ params, searchParams }: Props) {
   const { id } = await params;
-  const { saved } = await searchParams;
+  const { saved, tinyError } = await searchParams;
   const [product, categories] = await Promise.all([
     prisma.product.findUnique({ where: { id }, include: { images: { orderBy: { position: "asc" } } } }),
     prisma.category.findMany({ orderBy: { position: "asc" } }),
   ]);
   if (!product) notFound();
+  const tinyOk = isTinyConfigured();
 
   const updateWithId = updateProduct.bind(null, product.id);
   const deleteWithId = deleteProduct.bind(null, product.id);
@@ -29,6 +34,12 @@ export default async function EditarProdutoPage({ params, searchParams }: Props)
       {saved && (
         <div className="mt-4 rounded-xl border border-emerald-600 bg-emerald-50 px-4 py-3 text-sm text-emerald-700">
           Alterações salvas com sucesso!
+        </div>
+      )}
+
+      {tinyError && (
+        <div className="mt-4 rounded-xl border border-rose-deep bg-rose/10 px-4 py-3 text-sm text-rose-deep">
+          {tinyError}
         </div>
       )}
 
@@ -155,39 +166,52 @@ export default async function EditarProdutoPage({ params, searchParams }: Props)
           </p>
         </div>
 
-        <div>
-          <label className="mb-1 block text-xs uppercase tracking-wide text-ink-soft">
-            ID do produto no Tiny (opcional)
-          </label>
-          <input
-            name="tinyProductId"
-            type="number"
-            defaultValue={product.tinyProductId ?? ""}
-            className={inputClass}
-          />
-          <p className="mt-1 text-xs text-ink-soft">
-            Se preenchido, os pedidos sincronizados com o Tiny vinculam esse item ao produto
-            correspondente pelo ID único (não use o &quot;código&quot;/SKU — pode haver mais de um
-            produto com o mesmo código no Tiny). Deixe em branco se ainda não sabe o ID.
-          </p>
-        </div>
-
-        {product.tinyProductId && (
+        {tinyOk && (
           <div className="rounded-xl border border-line bg-cream-2 p-4">
-            <p className="text-xs uppercase tracking-wide text-ink-soft">Estoque no Tiny</p>
-            <p className="mt-1 text-sm font-medium">
-              {product.outOfStock ? "Esgotado" : "Disponível"}
-              {product.stockSyncedAt && (
-                <span className="ml-2 font-normal text-ink-soft">
-                  (verificado em {product.stockSyncedAt.toLocaleString("pt-BR")})
-                </span>
-              )}
+            <p className="text-xs uppercase tracking-wide text-ink-soft">Vínculo com o Tiny</p>
+
+            {product.tinyProductId ? (
+              <>
+                <p className="mt-2 text-sm font-medium">
+                  {product.outOfStock ? "Esgotado" : "Disponível"}
+                  {product.stockSyncedAt && (
+                    <span className="ml-2 font-normal text-ink-soft">
+                      (verificado em {product.stockSyncedAt.toLocaleString("pt-BR")})
+                    </span>
+                  )}
+                </p>
+                <form action={syncStockWithId} className="mt-2">
+                  <button type="submit" className="text-xs text-rose-deep underline">
+                    Verificar agora
+                  </button>
+                </form>
+              </>
+            ) : (
+              <p className="mt-1 text-xs text-ink-soft">Ainda não vinculado a nenhum produto no Tiny.</p>
+            )}
+
+            <label className="mt-1 mb-1 block text-xs uppercase tracking-wide text-ink-soft">
+              Código (SKU) no Tiny
+            </label>
+            <input
+              name="tinyCodigo"
+              placeholder="Ex: 813"
+              defaultValue={product.tinyCodigo ?? ""}
+              className={inputClass}
+            />
+            <p className="mt-1 text-xs text-ink-soft">
+              Cole o código do produto no Tiny e salve — o site busca e vincula sozinho. Trocar o
+              código refaz o vínculo; apagar o campo desvincula. Se o código existir em mais de um
+              produto no Tiny, o vínculo não é feito automaticamente (evita linkar no produto
+              errado) e você verá um aviso pedindo pra conferir.
             </p>
-            <form action={syncStockWithId} className="mt-2">
-              <button type="submit" className="text-xs text-rose-deep underline">
-                Verificar agora
-              </button>
-            </form>
+
+            {!product.tinyProductId && (
+              <label className="mt-3 flex items-center gap-2 text-sm">
+                <input type="checkbox" name="createInTiny" />
+                Criar este produto agora no Tiny (em vez de vincular a um já existente)
+              </label>
+            )}
           </div>
         )}
 

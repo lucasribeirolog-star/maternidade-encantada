@@ -1,12 +1,14 @@
 import { prisma } from "@/lib/prisma";
 import { createProduct } from "@/app/actions/adminProducts";
 import { btnClass } from "@/lib/ui";
+import { isTinyConfigured } from "@/lib/tiny";
 
 const inputClass =
   "w-full rounded-xl border border-line bg-white px-4 py-3 text-sm outline-none focus:border-rose";
 
 export default async function NovoProdutoPage() {
   const categories = await prisma.category.findMany({ orderBy: { position: "asc" } });
+  const tinyOk = isTinyConfigured();
 
   return (
     <div className="max-w-xl">
@@ -101,6 +103,25 @@ export default async function NovoProdutoPage() {
         <label className="flex items-center gap-2 text-sm">
           <input type="checkbox" name="featured" /> Mostrar na vitrine da home
         </label>
+
+        {tinyOk && (
+          <div className="rounded-xl border border-line bg-cream-2 p-4">
+            <p className="text-xs uppercase tracking-wide text-ink-soft">Vincular ao Tiny</p>
+            <label className="mt-2 flex items-center gap-2 text-sm">
+              <input type="checkbox" name="createInTiny" />
+              Criar este produto também no Tiny automaticamente
+            </label>
+            <p className="mt-1 text-xs text-ink-soft">
+              Ou, se o produto já existe no Tiny, cole o código (SKU) dele abaixo em vez de marcar a
+              opção acima:
+            </p>
+            <input
+              name="tinyCodigo"
+              placeholder="Ex: 813"
+              className={`${inputClass} mt-2`}
+            />
+          </div>
+        )}
 
         <button type="submit" className={btnClass("primary")}>
           Criar produto
