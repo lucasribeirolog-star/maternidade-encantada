@@ -3,6 +3,11 @@ import { createProduct } from "@/app/actions/adminProducts";
 import { btnClass } from "@/lib/ui";
 import { isTinyConfigured } from "@/lib/tiny";
 
+// Cadastrar um produto pode envolver várias chamadas em sequência (subir fotos,
+// buscar/criar no Tiny, checar estoque) — o limite padrão da Vercel é curto
+// demais pra isso, mesmo quando tudo é salvo com sucesso no banco.
+export const maxDuration = 60;
+
 const inputClass =
   "w-full rounded-xl border border-line bg-white px-4 py-3 text-sm outline-none focus:border-rose";
 

@@ -120,17 +120,21 @@ export async function createProduct(formData: FormData) {
     throw new Error("Preencha nome, descrição e preço.");
   }
 
-  const imageUrl = imageFile ? await saveUploadedImage(imageFile) : null;
-  const galleryUrls = (
-    await Promise.all(galleryFiles.map((file) => saveUploadedImage(file)))
-  ).filter((url): url is string => Boolean(url));
+  // Sobe as fotos e resolve o vinculo com o Tiny em paralelo — isso ajuda a
+  // ficar dentro do tempo limite da funcao quando ha varias fotos + chamadas
+  // ao Tiny (ver maxDuration no page.tsx desta rota).
+  const [imageUrl, galleryUrls, tinyLink] = await Promise.all([
+    imageFile ? saveUploadedImage(imageFile) : Promise.resolve(null),
+    Promise.all(galleryFiles.map((file) => saveUploadedImage(file))).then((urls) =>
+      urls.filter((url): url is string => Boolean(url))
+    ),
+    resolveTinyLink({ createInTiny, tinyCodigo, name, priceCents }),
+  ]);
 
   const imagesToCreate = [
     ...(imageUrl ? [{ url: imageUrl, alt: name, position: 0 }] : []),
     ...galleryUrls.map((url, i) => ({ url, alt: name, position: i + 1 })),
   ];
-
-  const tinyLink = await resolveTinyLink({ createInTiny, tinyCodigo, name, priceCents });
 
   const product = await prisma.product.create({
     data: {
