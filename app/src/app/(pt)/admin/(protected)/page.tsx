@@ -30,7 +30,7 @@ export default async function AdminDashboardPage({ searchParams }: Props) {
 
       {params.stockSynced && (
         <div className="mt-6 rounded-xl border border-emerald-600 bg-emerald-50 px-4 py-3 text-sm text-emerald-700">
-          <p className="font-medium">Atualização concluída!</p>
+          <p className="font-medium">Estoque atualizado com sucesso!!!</p>
           <p className="mt-1">
             {params.checked} produtos checados no Tiny, {params.outOfStock} esgotados no momento.
           </p>
