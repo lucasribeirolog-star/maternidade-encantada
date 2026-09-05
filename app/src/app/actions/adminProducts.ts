@@ -178,10 +178,8 @@ export async function updateProduct(productId: string, formData: FormData) {
   const reviewCount = Math.max(0, Number(formData.get("reviewCount") ?? 0));
   const createInTiny = formData.get("createInTiny") === "on";
   const tinyCodigoInput = String(formData.get("tinyCodigo") ?? "").trim();
-  const imageFile = formData.get("image") as File | null;
   const galleryFiles = formData.getAll("images") as File[];
 
-  const imageUrl = imageFile ? await saveUploadedImage(imageFile) : null;
   const galleryUrls = (
     await Promise.all(galleryFiles.map((file) => saveUploadedImage(file)))
   ).filter((url): url is string => Boolean(url));
@@ -251,12 +249,9 @@ export async function updateProduct(productId: string, formData: FormData) {
       rating,
       reviewCount,
       ...tinyUpdate,
-      ...((imageUrl || galleryUrls.length > 0) && {
+      ...(galleryUrls.length > 0 && {
         images: {
-          create: [
-            ...(imageUrl ? [{ url: imageUrl, alt: name, position: 0 }] : []),
-            ...galleryUrls.map((url, i) => ({ url, alt: name, position: nextPosition + i })),
-          ],
+          create: galleryUrls.map((url, i) => ({ url, alt: name, position: nextPosition + i })),
         },
       }),
     },
@@ -282,6 +277,44 @@ export async function syncProductStock(productId: string) {
     where: { id: productId },
     data: { outOfStock: saldo <= 0, stockSyncedAt: new Date() },
   });
+
+  revalidatePath("/admin/produtos");
+  revalidatePath(`/admin/produtos/${productId}`);
+  revalidatePath("/produtos");
+}
+
+/** Remove uma foto da galeria do produto (não pode ser a única foto restante). */
+export async function deleteProductImage(productId: string, imageId: string) {
+  await requireAdmin();
+
+  const count = await prisma.productImage.count({ where: { productId } });
+  if (count <= 1) return;
+
+  await prisma.productImage.delete({ where: { id: imageId } });
+
+  revalidatePath("/admin/produtos");
+  revalidatePath(`/admin/produtos/${productId}`);
+  revalidatePath("/produtos");
+}
+
+/** Promove uma foto da galeria a foto principal (posição 0), reordenando as demais. */
+export async function setMainProductImage(productId: string, imageId: string) {
+  await requireAdmin();
+
+  const images = await prisma.productImage.findMany({
+    where: { productId },
+    orderBy: { position: "asc" },
+  });
+  const chosen = images.find((img) => img.id === imageId);
+  if (!chosen) return;
+
+  const rest = images.filter((img) => img.id !== imageId);
+  await prisma.$transaction([
+    prisma.productImage.update({ where: { id: chosen.id }, data: { position: 0 } }),
+    ...rest.map((img, i) =>
+      prisma.productImage.update({ where: { id: img.id }, data: { position: i + 1 } })
+    ),
+  ]);
 
   revalidatePath("/admin/produtos");
   revalidatePath(`/admin/produtos/${productId}`);

@@ -1,7 +1,13 @@
 import Image from "next/image";
 import { notFound } from "next/navigation";
 import { prisma } from "@/lib/prisma";
-import { updateProduct, deleteProduct, syncProductStock } from "@/app/actions/adminProducts";
+import {
+  updateProduct,
+  deleteProduct,
+  syncProductStock,
+  deleteProductImage,
+  setMainProductImage,
+} from "@/app/actions/adminProducts";
 import { btnClass } from "@/lib/ui";
 import { isTinyConfigured } from "@/lib/tiny";
 
@@ -44,17 +50,42 @@ export default async function EditarProdutoPage({ params, searchParams }: Props)
       )}
 
       {product.images.length > 0 && (
-        <div className="mt-4 flex flex-wrap gap-3">
-          {product.images.map((img) => (
-            <Image
-              key={img.id}
-              src={img.url}
-              alt={product.name}
-              width={100}
-              height={100}
-              className="h-24 w-24 rounded-xl object-cover"
-            />
-          ))}
+        <div className="mt-4">
+          <p className="mb-2 text-xs uppercase tracking-wide text-ink-soft">Fotos</p>
+          <div className="flex flex-wrap gap-3">
+            {product.images.map((img, i) => (
+              <div key={img.id} className="relative">
+                <Image
+                  src={img.url}
+                  alt={product.name}
+                  width={100}
+                  height={100}
+                  className="h-24 w-24 rounded-xl object-cover"
+                />
+                {i === 0 && (
+                  <span className="absolute left-1 top-1 rounded-full bg-wine px-2 py-0.5 text-[10px] font-medium text-white">
+                    Capa
+                  </span>
+                )}
+                <div className="mt-1 flex justify-center gap-2 text-[11px]">
+                  {i !== 0 && (
+                    <form action={setMainProductImage.bind(null, product.id, img.id)}>
+                      <button type="submit" className="text-rose-deep underline">
+                        Tornar capa
+                      </button>
+                    </form>
+                  )}
+                  {product.images.length > 1 && (
+                    <form action={deleteProductImage.bind(null, product.id, img.id)}>
+                      <button type="submit" className="text-ink-soft underline hover:text-rose-deep">
+                        Excluir
+                      </button>
+                    </form>
+                  )}
+                </div>
+              </div>
+            ))}
+          </div>
         </div>
       )}
 
@@ -217,19 +248,12 @@ export default async function EditarProdutoPage({ params, searchParams }: Props)
 
         <div>
           <label className="mb-2 block text-xs uppercase tracking-wide text-ink-soft">
-            Trocar foto principal
-          </label>
-          <input name="image" type="file" accept="image/*" className={inputClass} />
-        </div>
-
-        <div>
-          <label className="mb-2 block text-xs uppercase tracking-wide text-ink-soft">
-            Adicionar mais fotos à galeria
+            Adicionar fotos
           </label>
           <input name="images" type="file" accept="image/*" multiple className={inputClass} />
           <p className="mt-1 text-xs text-ink-soft">
-            Selecione uma ou mais fotos para adicionar à galeria do produto (não substitui as já
-            existentes).
+            Selecione uma ou mais fotos para adicionar. Pra excluir uma foto existente ou trocar
+            qual é a capa, use os botões abaixo das fotos no topo da página.
           </p>
         </div>
 
