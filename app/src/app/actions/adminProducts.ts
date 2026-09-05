@@ -178,20 +178,6 @@ export async function updateProduct(productId: string, formData: FormData) {
   const reviewCount = Math.max(0, Number(formData.get("reviewCount") ?? 0));
   const createInTiny = formData.get("createInTiny") === "on";
   const tinyCodigoInput = String(formData.get("tinyCodigo") ?? "").trim();
-  const galleryFiles = formData.getAll("images") as File[];
-
-  const galleryUrls = (
-    await Promise.all(galleryFiles.map((file) => saveUploadedImage(file)))
-  ).filter((url): url is string => Boolean(url));
-
-  let nextPosition = 0;
-  if (galleryUrls.length > 0) {
-    const lastImage = await prisma.productImage.findFirst({
-      where: { productId },
-      orderBy: { position: "desc" },
-    });
-    nextPosition = (lastImage?.position ?? -1) + 1;
-  }
 
   const existing = await prisma.product.findUnique({
     where: { id: productId },
@@ -249,11 +235,6 @@ export async function updateProduct(productId: string, formData: FormData) {
       rating,
       reviewCount,
       ...tinyUpdate,
-      ...(galleryUrls.length > 0 && {
-        images: {
-          create: galleryUrls.map((url, i) => ({ url, alt: name, position: nextPosition + i })),
-        },
-      }),
     },
   });
 
@@ -276,6 +257,37 @@ export async function syncProductStock(productId: string) {
   await prisma.product.update({
     where: { id: productId },
     data: { outOfStock: saldo <= 0, stockSyncedAt: new Date() },
+  });
+
+  revalidatePath("/admin/produtos");
+  revalidatePath(`/admin/produtos/${productId}`);
+  revalidatePath("/produtos");
+}
+
+/** Adiciona uma ou mais fotos à galeria de um produto já cadastrado, sem mexer no resto dos dados. */
+export async function addProductImages(productId: string, formData: FormData) {
+  await requireAdmin();
+
+  const files = formData.getAll("images") as File[];
+  const urls = (await Promise.all(files.map((file) => saveUploadedImage(file)))).filter(
+    (url): url is string => Boolean(url)
+  );
+  if (urls.length === 0) return;
+
+  const product = await prisma.product.findUnique({ where: { id: productId }, select: { name: true } });
+  const lastImage = await prisma.productImage.findFirst({
+    where: { productId },
+    orderBy: { position: "desc" },
+  });
+  const nextPosition = (lastImage?.position ?? -1) + 1;
+
+  await prisma.productImage.createMany({
+    data: urls.map((url, i) => ({
+      productId,
+      url,
+      alt: product?.name ?? "",
+      position: nextPosition + i,
+    })),
   });
 
   revalidatePath("/admin/produtos");

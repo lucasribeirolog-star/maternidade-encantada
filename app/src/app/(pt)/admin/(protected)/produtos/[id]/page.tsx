@@ -5,6 +5,7 @@ import {
   updateProduct,
   deleteProduct,
   syncProductStock,
+  addProductImages,
   deleteProductImage,
   setMainProductImage,
 } from "@/app/actions/adminProducts";
@@ -32,6 +33,7 @@ export default async function EditarProdutoPage({ params, searchParams }: Props)
   const updateWithId = updateProduct.bind(null, product.id);
   const deleteWithId = deleteProduct.bind(null, product.id);
   const syncStockWithId = syncProductStock.bind(null, product.id);
+  const addImagesWithId = addProductImages.bind(null, product.id);
 
   return (
     <div className="max-w-xl">
@@ -49,9 +51,9 @@ export default async function EditarProdutoPage({ params, searchParams }: Props)
         </div>
       )}
 
-      {product.images.length > 0 && (
-        <div className="mt-4">
-          <p className="mb-2 text-xs uppercase tracking-wide text-ink-soft">Fotos</p>
+      <div className="mt-4">
+        <p className="mb-2 text-xs uppercase tracking-wide text-ink-soft">Fotos</p>
+        {product.images.length > 0 && (
           <div className="flex flex-wrap gap-3">
             {product.images.map((img, i) => (
               <div key={img.id} className="relative">
@@ -86,8 +88,22 @@ export default async function EditarProdutoPage({ params, searchParams }: Props)
               </div>
             ))}
           </div>
-        </div>
-      )}
+        )}
+
+        <form action={addImagesWithId} className="mt-3 flex flex-wrap items-center gap-3">
+          <input
+            name="images"
+            type="file"
+            accept="image/*"
+            multiple
+            required
+            className="text-sm text-ink-soft file:mr-3 file:rounded-full file:border-0 file:bg-cream-2 file:px-4 file:py-2 file:text-sm file:text-ink"
+          />
+          <button type="submit" className={btnClass("outline")}>
+            Adicionar fotos
+          </button>
+        </form>
+      </div>
 
       <form action={updateWithId} className="mt-6 space-y-4">
         <input name="name" required defaultValue={product.name} className={inputClass} />
@@ -245,17 +261,6 @@ export default async function EditarProdutoPage({ params, searchParams }: Props)
             )}
           </div>
         )}
-
-        <div>
-          <label className="mb-2 block text-xs uppercase tracking-wide text-ink-soft">
-            Adicionar fotos
-          </label>
-          <input name="images" type="file" accept="image/*" multiple className={inputClass} />
-          <p className="mt-1 text-xs text-ink-soft">
-            Selecione uma ou mais fotos para adicionar. Pra excluir uma foto existente ou trocar
-            qual é a capa, use os botões abaixo das fotos no topo da página.
-          </p>
-        </div>
 
         <label className="flex items-center gap-2 text-sm">
           <input type="checkbox" name="featured" defaultChecked={product.featured} /> Mostrar na
