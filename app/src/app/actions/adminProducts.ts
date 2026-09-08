@@ -1,8 +1,6 @@
 "use server";
 
 import { randomUUID } from "crypto";
-import path from "path";
-import { put } from "@vercel/blob";
 import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
 import { prisma } from "@/lib/prisma";
@@ -87,16 +85,6 @@ async function resolveTinyLink({
   }
 }
 
-async function saveUploadedImage(file: File): Promise<string | null> {
-  if (!file || file.size === 0) return null;
-
-  const ext = path.extname(file.name) || ".jpg";
-  const filename = `uploads/${randomUUID()}${ext}`;
-  const blob = await put(filename, file, { access: "public" });
-
-  return blob.url;
-}
-
 export async function createProduct(formData: FormData) {
   await requireAdmin();
 
@@ -111,8 +99,11 @@ export async function createProduct(formData: FormData) {
   const widthCm = Number(formData.get("widthCm") ?? 20);
   const lengthCm = Number(formData.get("lengthCm") ?? 20);
   const featured = formData.get("featured") === "on";
-  const imageFile = formData.get("image") as File | null;
-  const galleryFiles = formData.getAll("images") as File[];
+  const imageUrl = String(formData.get("image") ?? "").trim() || null;
+  const galleryUrls = formData
+    .getAll("images")
+    .map((v) => String(v).trim())
+    .filter(Boolean);
   const createInTiny = formData.get("createInTiny") === "on";
   const tinyCodigo = String(formData.get("tinyCodigo") ?? "").trim();
 
@@ -120,16 +111,10 @@ export async function createProduct(formData: FormData) {
     throw new Error("Preencha nome, descrição e preço.");
   }
 
-  // Sobe as fotos e resolve o vinculo com o Tiny em paralelo — isso ajuda a
-  // ficar dentro do tempo limite da funcao quando ha varias fotos + chamadas
-  // ao Tiny (ver maxDuration no page.tsx desta rota).
-  const [imageUrl, galleryUrls, tinyLink] = await Promise.all([
-    imageFile ? saveUploadedImage(imageFile) : Promise.resolve(null),
-    Promise.all(galleryFiles.map((file) => saveUploadedImage(file))).then((urls) =>
-      urls.filter((url): url is string => Boolean(url))
-    ),
-    resolveTinyLink({ createInTiny, tinyCodigo, name, priceCents }),
-  ]);
+  // As fotos ja foram enviadas pro Blob direto do navegador (ver
+  // ImageUploadField) — aqui so recebemos as URLs prontas. Resolve o vinculo
+  // com o Tiny em paralelo pra ficar dentro do tempo limite da funcao.
+  const tinyLink = await resolveTinyLink({ createInTiny, tinyCodigo, name, priceCents });
 
   const imagesToCreate = [
     ...(imageUrl ? [{ url: imageUrl, alt: name, position: 0 }] : []),
@@ -272,10 +257,10 @@ export async function syncProductStock(productId: string) {
 export async function addProductImages(productId: string, formData: FormData) {
   await requireAdmin();
 
-  const files = formData.getAll("images") as File[];
-  const urls = (await Promise.all(files.map((file) => saveUploadedImage(file)))).filter(
-    (url): url is string => Boolean(url)
-  );
+  const urls = formData
+    .getAll("images")
+    .map((v) => String(v).trim())
+    .filter(Boolean);
   if (urls.length === 0) return;
 
   const product = await prisma.product.findUnique({ where: { id: productId }, select: { name: true } });

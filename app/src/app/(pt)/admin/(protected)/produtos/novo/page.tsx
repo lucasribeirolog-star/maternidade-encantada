@@ -2,6 +2,7 @@ import { prisma } from "@/lib/prisma";
 import { createProduct } from "@/app/actions/adminProducts";
 import { btnClass } from "@/lib/ui";
 import { isTinyConfigured } from "@/lib/tiny";
+import { ImageUploadField } from "@/components/admin/ImageUploadField";
 
 // Cadastrar um produto pode envolver várias chamadas em sequência (subir fotos,
 // buscar/criar no Tiny, checar estoque) — o limite padrão da Vercel é curto
@@ -92,14 +93,14 @@ export default async function NovoProdutoPage() {
           <label className="mb-2 block text-xs uppercase tracking-wide text-ink-soft">
             Foto principal
           </label>
-          <input name="image" type="file" accept="image/*" className={inputClass} />
+          <ImageUploadField name="image" inputClassName={inputClass} />
         </div>
 
         <div>
           <label className="mb-2 block text-xs uppercase tracking-wide text-ink-soft">
             Demais fotos (galeria)
           </label>
-          <input name="images" type="file" accept="image/*" multiple className={inputClass} />
+          <ImageUploadField name="images" multiple inputClassName={inputClass} />
           <p className="mt-1 text-xs text-ink-soft">
             Selecione uma ou mais fotos adicionais para a galeria do produto.
           </p>

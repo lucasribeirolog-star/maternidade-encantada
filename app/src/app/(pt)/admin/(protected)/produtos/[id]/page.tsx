@@ -11,6 +11,7 @@ import {
 } from "@/app/actions/adminProducts";
 import { btnClass } from "@/lib/ui";
 import { isTinyConfigured } from "@/lib/tiny";
+import { ImageUploadField } from "@/components/admin/ImageUploadField";
 
 // Salvar/editar um produto pode envolver várias chamadas em sequência (subir
 // fotos, buscar/criar no Tiny, checar estoque) — o limite padrão da Vercel é
@@ -95,14 +96,11 @@ export default async function EditarProdutoPage({ params, searchParams }: Props)
           </div>
         )}
 
-        <form action={addImagesWithId} className="mt-3 flex flex-wrap items-center gap-3">
-          <input
+        <form action={addImagesWithId} className="mt-3 flex flex-wrap items-end gap-3">
+          <ImageUploadField
             name="images"
-            type="file"
-            accept="image/*"
             multiple
-            required
-            className="text-sm text-ink-soft file:mr-3 file:rounded-full file:border-0 file:bg-cream-2 file:px-4 file:py-2 file:text-sm file:text-ink"
+            inputClassName="text-sm text-ink-soft file:mr-3 file:rounded-full file:border-0 file:bg-cream-2 file:px-4 file:py-2 file:text-sm file:text-ink"
           />
           <button type="submit" className={btnClass("outline")}>
             Adicionar fotos
