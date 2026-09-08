@@ -1,3 +1,6 @@
+"use client";
+
+import { useCallback, useEffect, useRef } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { dictionaries, LOCALE_PATHS, type Locale } from "@/lib/i18n";
@@ -11,6 +14,9 @@ type Product = {
   images: { url: string; alt: string }[];
 };
 
+const AUTO_ADVANCE_MS = 3500;
+const CARD_GAP_PX = 24;
+
 export function FeaturedCarousel({
   products,
   locale = "pt",
@@ -18,22 +24,60 @@ export function FeaturedCarousel({
   products: Product[];
   locale?: Locale;
 }) {
-  if (products.length === 0) return null;
-
   const t = dictionaries[locale].showcase;
   const base = LOCALE_PATHS[locale] === "/" ? "" : LOCALE_PATHS[locale];
-  const track = [...products, ...products];
+  const trackRef = useRef<HTMLDivElement>(null);
+  const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
+
+  const step = useCallback((direction: 1 | -1) => {
+    const el = trackRef.current;
+    if (!el) return;
+    const card = el.querySelector<HTMLElement>("[data-card]");
+    const amount = (card?.offsetWidth ?? 260) + CARD_GAP_PX;
+    const maxScroll = el.scrollWidth - el.clientWidth;
+
+    let next = el.scrollLeft + amount * direction;
+    if (next >= maxScroll - 4) next = 0;
+    if (next < 0) next = maxScroll;
+
+    el.scrollTo({ left: next, behavior: "smooth" });
+  }, []);
+
+  const resetTimer = useCallback(() => {
+    if (timerRef.current) clearInterval(timerRef.current);
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    timerRef.current = setInterval(() => step(1), AUTO_ADVANCE_MS);
+  }, [step]);
+
+  const pauseTimer = useCallback(() => {
+    if (timerRef.current) clearInterval(timerRef.current);
+  }, []);
+
+  useEffect(() => {
+    resetTimer();
+    return pauseTimer;
+  }, [resetTimer, pauseTimer]);
+
+  if (products.length === 0) return null;
 
   return (
-    <div className="w-full overflow-hidden [mask-image:linear-gradient(90deg,transparent,black_8%,black_92%,transparent)]">
-      <div className="marquee-track flex w-max gap-6">
-        {track.map((product, i) => {
+    <div className="relative">
+      <div
+        ref={trackRef}
+        onMouseEnter={pauseTimer}
+        onMouseLeave={resetTimer}
+        onTouchStart={pauseTimer}
+        onTouchEnd={resetTimer}
+        className="flex w-full snap-x snap-mandatory scroll-smooth gap-6 overflow-x-auto px-6 pb-2 [-ms-overflow-style:none] [scrollbar-width:none] [mask-image:linear-gradient(90deg,transparent,black_4%,black_96%,transparent)] [&::-webkit-scrollbar]:hidden"
+      >
+        {products.map((product) => {
           const image = product.images[0];
           return (
             <Link
-              key={`${product.id}-${i}`}
+              key={product.id}
+              data-card
               href={`${base}/produtos/${product.slug}`}
-              className="group block w-56 shrink-0 overflow-hidden rounded-2xl bg-white shadow-[0_20px_40px_-28px_rgba(62,39,35,0.35)] sm:w-64"
+              className="group block w-56 shrink-0 snap-start overflow-hidden rounded-2xl bg-white shadow-[0_20px_40px_-28px_rgba(62,39,35,0.35)] sm:w-64"
             >
               <div className="aspect-square overflow-hidden bg-cream-2">
                 {image && (
@@ -59,6 +103,37 @@ export function FeaturedCarousel({
           );
         })}
       </div>
+
+      {products.length > 1 && (
+        <>
+          <button
+            type="button"
+            aria-label="Anterior"
+            onClick={() => {
+              step(-1);
+              resetTimer();
+            }}
+            className="absolute left-1 top-1/2 flex h-9 w-9 -translate-y-1/2 items-center justify-center rounded-full bg-white text-ink shadow-[0_8px_20px_-8px_rgba(62,39,35,0.5)] transition-transform hover:scale-105 sm:left-3 sm:h-11 sm:w-11"
+          >
+            <svg viewBox="0 0 24 24" className="h-5 w-5 fill-none stroke-current stroke-[2.5]">
+              <path d="M15 6l-6 6 6 6" strokeLinecap="round" strokeLinejoin="round" />
+            </svg>
+          </button>
+          <button
+            type="button"
+            aria-label="Próxima"
+            onClick={() => {
+              step(1);
+              resetTimer();
+            }}
+            className="absolute right-1 top-1/2 flex h-9 w-9 -translate-y-1/2 items-center justify-center rounded-full bg-white text-ink shadow-[0_8px_20px_-8px_rgba(62,39,35,0.5)] transition-transform hover:scale-105 sm:right-3 sm:h-11 sm:w-11"
+          >
+            <svg viewBox="0 0 24 24" className="h-5 w-5 fill-none stroke-current stroke-[2.5]">
+              <path d="M9 6l6 6-6 6" strokeLinecap="round" strokeLinejoin="round" />
+            </svg>
+          </button>
+        </>
+      )}
     </div>
   );
 }
