@@ -36,34 +36,29 @@ export function HomeContent({ locale, featured }: { locale: Locale; featured: Pr
       <section className="relative flex min-h-[78vh] items-center justify-center">
         <div className="absolute inset-y-0 left-1/2 w-screen -translate-x-1/2 overflow-hidden">
           <Image
-            src="/products/hero-boneca.jpg"
+            src="/products/hero-vitrine.jpg"
             alt={HERO_ALT[locale]}
             fill
             priority
-            className="object-cover object-[center_30%]"
-          />
-          <div
-            className="absolute inset-0"
-            style={{
-              background:
-                "linear-gradient(180deg, rgba(63,27,39,.32) 0%, rgba(63,27,39,.58) 100%)",
-            }}
+            className="object-cover"
           />
         </div>
-        <div className="relative z-10 max-w-xl px-6 text-center text-white">
-          <span className="mb-4 block text-xs tracking-[0.16em] uppercase opacity-90">
-            {t.hero.eyebrow}
-          </span>
-          <h1 className="text-4xl md:text-6xl font-semibold text-white">
-            {t.hero.heading1}
-            <br />
-            {t.hero.heading2}
+
+        {/* Texto real do H1 fica só pra SEO/acessibilidade — a arte já traz a marca escrita */}
+        <div className="sr-only">
+          <span>{t.hero.eyebrow}</span>
+          <h1>
+            {t.hero.heading1} {t.hero.heading2}
           </h1>
-          <p className="mx-auto mt-5 max-w-md text-base opacity-90">{t.hero.text}</p>
-          <Link href={`${base}/produtos`} className={`${btnClass("primary")} mt-8`}>
-            {t.hero.cta}
-          </Link>
+          <p>{t.hero.text}</p>
         </div>
+
+        <Link
+          href={`${base}/produtos`}
+          className={`${btnClass("primary")} absolute left-1/2 top-[56%] -translate-x-1/2 -translate-y-1/2 shadow-[0_14px_32px_-10px_rgba(63,27,39,0.55)]`}
+        >
+          {t.hero.cta}
+        </Link>
       </section>
 
       <section className="mx-auto grid max-w-6xl grid-cols-2 gap-9 px-6 py-20 md:grid-cols-4">
