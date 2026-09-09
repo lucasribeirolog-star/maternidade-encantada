@@ -12,7 +12,7 @@ export async function Header({ locale = "pt" }: { locale?: Locale }) {
   const base = LOCALE_PATHS[locale] === "/" ? "" : LOCALE_PATHS[locale];
 
   const navLinks = [
-    { href: `${base}/produtos`, label: t.nav.products },
+    { href: `${base}/produtos`, label: locale === "pt" ? "Bonecas Pronta Entrega" : t.nav.products },
     ...(locale === "pt"
       ? [
           { href: "/categoria/kits-e-enxoval", label: t.nav.kits },
@@ -32,17 +32,17 @@ export async function Header({ locale = "pt" }: { locale?: Locale }) {
           </span>
         </Link>
         <nav className="hidden md:flex items-center gap-8 text-sm text-ink/80">
-          {locale === "pt" && (
+          {navLinks.map((link, i) => (
             <Link
-              href="/pronta-entrega"
-              className="flex items-center gap-1.5 font-medium text-rose-deep transition-colors hover:text-wine"
+              key={link.href + link.label}
+              href={link.href}
+              className={
+                i === 0 && locale === "pt"
+                  ? "flex items-center gap-1.5 font-medium text-rose-deep transition-colors hover:text-wine"
+                  : "hover:text-ink transition-colors"
+              }
             >
-              <span className="h-1.5 w-1.5 rounded-full bg-rose-deep" />
-              Pronta Entrega
-            </Link>
-          )}
-          {navLinks.map((link) => (
-            <Link key={link.href} href={link.href} className="hover:text-ink transition-colors">
+              {i === 0 && locale === "pt" && <span className="h-1.5 w-1.5 rounded-full bg-rose-deep" />}
               {link.label}
             </Link>
           ))}
