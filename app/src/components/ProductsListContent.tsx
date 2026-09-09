@@ -10,6 +10,7 @@ type Product = {
   rating: number;
   reviewCount: number;
   outOfStock: boolean;
+  readyToShip: boolean;
   images: { url: string; alt: string }[];
 };
 

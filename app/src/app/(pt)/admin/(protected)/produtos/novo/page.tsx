@@ -109,6 +109,10 @@ export default async function NovoProdutoPage() {
         <label className="flex items-center gap-2 text-sm">
           <input type="checkbox" name="featured" /> Mostrar na vitrine da home
         </label>
+        <label className="flex items-center gap-2 text-sm">
+          <input type="checkbox" name="readyToShip" /> Pronta entrega (produto já pronto, envio
+          imediato)
+        </label>
 
         {tinyOk && (
           <div className="rounded-xl border border-line bg-cream-2 p-4">

@@ -28,6 +28,7 @@ model Product {
   lengthCm    Int      @default(20)
   active      Boolean  @default(true)
   featured    Boolean  @default(false)
+  readyToShip Boolean  @default(false)
   rating      Float    @default(5)
   reviewCount Int      @default(0)
   tinyProductId Int?

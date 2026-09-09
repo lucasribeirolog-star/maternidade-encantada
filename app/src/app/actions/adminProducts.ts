@@ -99,6 +99,7 @@ export async function createProduct(formData: FormData) {
   const widthCm = Number(formData.get("widthCm") ?? 20);
   const lengthCm = Number(formData.get("lengthCm") ?? 20);
   const featured = formData.get("featured") === "on";
+  const readyToShip = formData.get("readyToShip") === "on";
   const imageUrl = String(formData.get("image") ?? "").trim() || null;
   const galleryUrls = formData
     .getAll("images")
@@ -138,12 +139,14 @@ export async function createProduct(formData: FormData) {
       widthCm,
       lengthCm,
       featured,
+      readyToShip,
       images: imagesToCreate.length > 0 ? { create: imagesToCreate } : undefined,
     },
   });
 
   revalidatePath("/admin/produtos");
   revalidatePath("/produtos");
+  revalidatePath("/pronta-entrega");
   const errorParam = tinyLink.tinyError ? `&tinyError=${encodeURIComponent(tinyLink.tinyError)}` : "";
   redirect(`/admin/produtos/${product.id}?saved=1${errorParam}`);
 }
@@ -162,6 +165,7 @@ export async function updateProduct(productId: string, formData: FormData) {
   const widthCm = Number(formData.get("widthCm") ?? 20);
   const lengthCm = Number(formData.get("lengthCm") ?? 20);
   const featured = formData.get("featured") === "on";
+  const readyToShip = formData.get("readyToShip") === "on";
   const active = formData.get("active") === "on";
   const rating = Math.max(0, Math.min(5, Number(formData.get("rating") ?? 5)));
   const reviewCount = Math.max(0, Number(formData.get("reviewCount") ?? 0));
@@ -220,6 +224,7 @@ export async function updateProduct(productId: string, formData: FormData) {
       widthCm,
       lengthCm,
       featured,
+      readyToShip,
       active,
       rating,
       reviewCount,
@@ -229,6 +234,7 @@ export async function updateProduct(productId: string, formData: FormData) {
 
   revalidatePath("/admin/produtos");
   revalidatePath("/produtos");
+  revalidatePath("/pronta-entrega");
   revalidatePath(`/admin/produtos/${productId}`);
   const errorParam = tinyError ? `&tinyError=${encodeURIComponent(tinyError)}` : "";
   redirect(`/admin/produtos/${productId}?saved=1${errorParam}`);

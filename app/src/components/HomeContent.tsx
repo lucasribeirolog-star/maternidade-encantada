@@ -61,6 +61,22 @@ export function HomeContent({ locale, featured }: { locale: Locale; featured: Pr
         </Link>
       </section>
 
+      {locale === "pt" && (
+        <Link
+          href="/pronta-entrega"
+          className="group flex items-center justify-center gap-3 bg-wine px-6 py-4 text-center text-sm font-medium text-white transition-colors hover:bg-wine-deep sm:text-base"
+        >
+          <span className="h-2 w-2 shrink-0 animate-pulse rounded-full bg-gold" />
+          Bonecas Pronta Entrega — envio imediato, sem espera de produção
+          <svg
+            viewBox="0 0 24 24"
+            className="h-4 w-4 shrink-0 fill-none stroke-current stroke-2 transition-transform group-hover:translate-x-0.5"
+          >
+            <path d="M9 6l6 6-6 6" strokeLinecap="round" strokeLinejoin="round" />
+          </svg>
+        </Link>
+      )}
+
       <section className="mx-auto grid max-w-6xl grid-cols-2 gap-9 px-6 py-20 md:grid-cols-4">
         {[
           { title: t.whyUs.title1, text: t.whyUs.text1 },

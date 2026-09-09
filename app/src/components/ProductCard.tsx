@@ -14,6 +14,7 @@ type ProductCardData = {
   rating: number;
   reviewCount: number;
   outOfStock?: boolean;
+  readyToShip?: boolean;
   images: { url: string; alt: string }[];
 };
 
@@ -50,10 +51,16 @@ export function ProductCard({
         ) : (
           <div className="h-full w-full" />
         )}
-        {product.outOfStock && (
+        {product.outOfStock ? (
           <span className="absolute left-3 top-3 rounded-full bg-ink/80 px-3 py-1 text-xs font-medium text-white">
             Esgotado
           </span>
+        ) : (
+          product.readyToShip && (
+            <span className="absolute left-3 top-3 rounded-full bg-rose-deep px-3 py-1 text-xs font-medium text-white shadow-sm">
+              Pronta entrega
+            </span>
+          )
         )}
       </div>
       <div className="p-4">

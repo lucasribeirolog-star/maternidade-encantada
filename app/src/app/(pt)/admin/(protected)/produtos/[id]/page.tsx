@@ -270,6 +270,10 @@ export default async function EditarProdutoPage({ params, searchParams }: Props)
           vitrine da home
         </label>
         <label className="flex items-center gap-2 text-sm">
+          <input type="checkbox" name="readyToShip" defaultChecked={product.readyToShip} /> Pronta
+          entrega (produto já pronto, envio imediato)
+        </label>
+        <label className="flex items-center gap-2 text-sm">
           <input type="checkbox" name="active" defaultChecked={product.active} /> Produto ativo
           (visível na loja)
         </label>

@@ -21,6 +21,7 @@ type ProductDetail = {
   lengthCm: number;
   active: boolean;
   outOfStock: boolean;
+  readyToShip: boolean;
   rating: number;
   reviewCount: number;
   images: { url: string; alt: string }[];
@@ -109,6 +110,11 @@ export function ProductDetailContent({
                 </span>
               )}
               <h1 className="text-3xl font-semibold">{product.name}</h1>
+              {product.readyToShip && !product.outOfStock && (
+                <span className="mt-3 inline-block rounded-full bg-rose-deep px-3 py-1 text-xs font-medium text-white">
+                  Pronta entrega
+                </span>
+              )}
             </div>
             <WishlistButton
               productId={product.id}

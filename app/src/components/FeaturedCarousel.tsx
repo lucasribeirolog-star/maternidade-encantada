@@ -11,6 +11,7 @@ type Product = {
   name: string;
   priceCents: number;
   compareAtPriceCents: number | null;
+  readyToShip?: boolean;
   images: { url: string; alt: string }[];
 };
 
@@ -79,7 +80,7 @@ export function FeaturedCarousel({
               href={`${base}/produtos/${product.slug}`}
               className="group block w-56 shrink-0 snap-start overflow-hidden rounded-2xl bg-white shadow-[0_20px_40px_-28px_rgba(62,39,35,0.35)] sm:w-64"
             >
-              <div className="aspect-square overflow-hidden bg-cream-2">
+              <div className="relative aspect-square overflow-hidden bg-cream-2">
                 {image && (
                   <Image
                     src={image.url}
@@ -88,6 +89,11 @@ export function FeaturedCarousel({
                     height={400}
                     className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
                   />
+                )}
+                {product.readyToShip && (
+                  <span className="absolute left-2.5 top-2.5 rounded-full bg-rose-deep px-2.5 py-1 text-[11px] font-medium text-white shadow-sm">
+                    Pronta entrega
+                  </span>
                 )}
               </div>
               <div className="p-4">
