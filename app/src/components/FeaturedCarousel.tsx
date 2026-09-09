@@ -12,6 +12,7 @@ type Product = {
   priceCents: number;
   compareAtPriceCents: number | null;
   readyToShip?: boolean;
+  outOfStock?: boolean;
   images: { url: string; alt: string }[];
 };
 
@@ -90,7 +91,7 @@ export function FeaturedCarousel({
                     className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
                   />
                 )}
-                {product.readyToShip && (
+                {product.readyToShip && !product.outOfStock && (
                   <span className="absolute left-2.5 top-2.5 rounded-full bg-rose-deep px-2.5 py-1 text-[11px] font-medium text-white shadow-sm">
                     Pronta entrega
                   </span>

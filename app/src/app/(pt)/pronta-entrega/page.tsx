@@ -12,7 +12,7 @@ export const metadata: Metadata = {
 
 export default async function ProntaEntregaPage() {
   const products = await prisma.product.findMany({
-    where: { active: true, readyToShip: true },
+    where: { active: true, readyToShip: true, outOfStock: false },
     include: { images: true },
     orderBy: { createdAt: "desc" },
   });
