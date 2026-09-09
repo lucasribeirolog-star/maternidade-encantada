@@ -24,6 +24,9 @@ export function ProductsListContent({ locale, products }: { locale: Locale; prod
           {t.kicker}
         </span>
         <h1 className="text-3xl font-semibold">{t.title}</h1>
+        <span className="mt-3 inline-block rounded-full bg-rose-deep px-3 py-1 text-xs font-medium text-white">
+          {t.readyToShipBadge}
+        </span>
         <p className="mt-3 text-ink-soft">{t.subtitle}</p>
       </div>
       <div className="grid grid-cols-2 gap-6 md:grid-cols-4">

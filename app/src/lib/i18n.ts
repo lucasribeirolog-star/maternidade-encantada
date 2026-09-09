@@ -56,7 +56,7 @@ type Dictionary = {
     p2: string;
     quote: string;
   };
-  productsPage: { kicker: string; title: string; subtitle: string; empty: string };
+  productsPage: { kicker: string; title: string; readyToShipBadge: string; subtitle: string; empty: string };
   productDetail: { addToCart: string; weight: string; dimensions: string; reviews: string };
   footer: {
     tagline: string;
@@ -144,6 +144,7 @@ export const dictionaries: Record<Locale, Dictionary> = {
     productsPage: {
       kicker: "Coleção",
       title: "Bonecas Reborn",
+      readyToShipBadge: "Pronta entrega — envio imediato",
       subtitle: "Peças exclusivas, feitas à mão com realismo e carinho.",
       empty: "Nenhum produto cadastrado ainda.",
     },
@@ -259,6 +260,7 @@ export const dictionaries: Record<Locale, Dictionary> = {
     productsPage: {
       kicker: "Collection",
       title: "Reborn Dolls",
+      readyToShipBadge: "Ready to ship — dispatched immediately",
       subtitle: "Exclusive pieces, handmade with realism and care.",
       empty: "No products yet.",
     },
@@ -374,6 +376,7 @@ export const dictionaries: Record<Locale, Dictionary> = {
     productsPage: {
       kicker: "Colección",
       title: "Muñecas Reborn",
+      readyToShipBadge: "Entrega inmediata — envío inmediato",
       subtitle: "Piezas exclusivas, hechas a mano con realismo y cariño.",
       empty: "Aún no hay productos.",
     },
