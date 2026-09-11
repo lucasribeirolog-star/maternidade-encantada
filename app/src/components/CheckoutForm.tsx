@@ -1,6 +1,7 @@
 "use client";
 
 import { useRef, useState, useTransition } from "react";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { formatCents } from "@/lib/money";
 import { btnClass } from "@/lib/ui";
@@ -18,6 +19,7 @@ export function CheckoutForm() {
   const [selectedOption, setSelectedOption] = useState<ShippingOption | null>(null);
   const [formError, setFormError] = useState<string | null>(null);
   const [cepLookupState, setCepLookupState] = useState<"idle" | "loading" | "error">("idle");
+  const [termsAccepted, setTermsAccepted] = useState(false);
 
   async function handleCepBlur(event: React.FocusEvent<HTMLInputElement>) {
     const cep = event.target.value.replace(/\D/g, "");
@@ -64,6 +66,11 @@ export function CheckoutForm() {
 
     if (!selectedOption) {
       setFormError("Escolha uma opção de frete antes de continuar.");
+      return;
+    }
+
+    if (!termsAccepted) {
+      setFormError("Você precisa aceitar os Termos de Uso e a Política de Privacidade para continuar.");
       return;
     }
 
@@ -174,6 +181,27 @@ export function CheckoutForm() {
           </div>
         )}
       </section>
+
+      <label className="flex items-start gap-2 text-sm text-ink-soft">
+        <input
+          type="checkbox"
+          required
+          checked={termsAccepted}
+          onChange={(e) => setTermsAccepted(e.target.checked)}
+          className="mt-0.5"
+        />
+        <span>
+          Li e aceito os{" "}
+          <Link href="/termos-de-uso" target="_blank" className="text-rose-deep underline">
+            Termos de Uso
+          </Link>{" "}
+          e a{" "}
+          <Link href="/politica-de-privacidade" target="_blank" className="text-rose-deep underline">
+            Política de Privacidade
+          </Link>
+          .
+        </span>
+      </label>
 
       {formError && <p className="text-sm text-rose-deep">{formError}</p>}
 

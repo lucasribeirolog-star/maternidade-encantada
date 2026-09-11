@@ -1,14 +1,13 @@
 import type { Locale } from "./i18n";
 import type { LegalSection } from "@/components/LegalPage";
 
-type LegalPageContent = { title: string; disclaimer: string; sections: LegalSection[] };
+type LegalPageContent = { title: string; sections: LegalSection[] };
 type LegalContent = { privacy: LegalPageContent; terms: LegalPageContent; returns: LegalPageContent };
 
 export const legalContent: Record<Locale, LegalContent> = {
   pt: {
     privacy: {
       title: "Política de Privacidade",
-      disclaimer: "Texto-modelo — revise com um advogado antes de publicar a loja.",
       sections: [
         {
           heading: "1. Dados que coletamos",
@@ -34,7 +33,6 @@ export const legalContent: Record<Locale, LegalContent> = {
     },
     terms: {
       title: "Termos de Uso",
-      disclaimer: "Texto-modelo — revise com um advogado antes de publicar a loja.",
       sections: [
         {
           heading: "1. Sobre a loja",
@@ -56,7 +54,6 @@ export const legalContent: Record<Locale, LegalContent> = {
     },
     returns: {
       title: "Trocas e Devoluções",
-      disclaimer: "Texto-modelo — revise com um advogado antes de publicar a loja.",
       sections: [
         {
           heading: "Direito de arrependimento (7 dias)",
@@ -76,7 +73,6 @@ export const legalContent: Record<Locale, LegalContent> = {
   en: {
     privacy: {
       title: "Privacy Policy",
-      disclaimer: "Template text — have a lawyer review this before launching the store.",
       sections: [
         {
           heading: "1. Data we collect",
@@ -102,7 +98,6 @@ export const legalContent: Record<Locale, LegalContent> = {
     },
     terms: {
       title: "Terms of Use",
-      disclaimer: "Template text — have a lawyer review this before launching the store.",
       sections: [
         {
           heading: "1. About the store",
@@ -124,7 +119,6 @@ export const legalContent: Record<Locale, LegalContent> = {
     },
     returns: {
       title: "Returns & Exchanges",
-      disclaimer: "Template text — have a lawyer review this before launching the store.",
       sections: [
         {
           heading: "Right of withdrawal (7 days)",
@@ -144,7 +138,6 @@ export const legalContent: Record<Locale, LegalContent> = {
   es: {
     privacy: {
       title: "Política de Privacidad",
-      disclaimer: "Texto de plantilla — revísalo con un abogado antes de publicar la tienda.",
       sections: [
         {
           heading: "1. Datos que recopilamos",
@@ -170,7 +163,6 @@ export const legalContent: Record<Locale, LegalContent> = {
     },
     terms: {
       title: "Términos de Uso",
-      disclaimer: "Texto de plantilla — revísalo con un abogado antes de publicar la tienda.",
       sections: [
         {
           heading: "1. Sobre la tienda",
@@ -192,7 +184,6 @@ export const legalContent: Record<Locale, LegalContent> = {
     },
     returns: {
       title: "Cambios y Devoluciones",
-      disclaimer: "Texto de plantilla — revísalo con un abogado antes de publicar la tienda.",
       sections: [
         {
           heading: "Derecho de arrepentimiento (7 días)",
