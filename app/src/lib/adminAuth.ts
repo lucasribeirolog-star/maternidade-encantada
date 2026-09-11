@@ -24,7 +24,7 @@ export async function createAdminSession(email: string) {
   const store = await cookies();
   store.set(COOKIE_NAME, token, {
     httpOnly: true,
-    sameSite: "lax",
+    sameSite: "strict",
     secure: process.env.NODE_ENV === "production",
     maxAge: 60 * 60 * 24 * 7,
     path: "/",
