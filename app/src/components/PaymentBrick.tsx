@@ -47,6 +47,7 @@ export function PaymentBrick({ orderId, totalReais, payerEmail }: Props) {
             debitCard: "all",
             bankTransfer: "all",
             ticket: "all",
+            maxInstallments: 10,
           },
         },
         callbacks: {
