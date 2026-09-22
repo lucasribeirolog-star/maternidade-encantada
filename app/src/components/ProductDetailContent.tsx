@@ -22,6 +22,7 @@ type ProductDetail = {
   active: boolean;
   outOfStock: boolean;
   readyToShip: boolean;
+  madeToOrder: boolean;
   rating: number;
   reviewCount: number;
   images: { url: string; alt: string }[];
@@ -67,9 +68,11 @@ export function ProductDetailContent({
               priceCurrency: "BRL",
               price: (product.priceCents / 100).toFixed(2),
               availability:
-                product.active && !product.outOfStock
-                  ? "https://schema.org/InStock"
-                  : "https://schema.org/OutOfStock",
+                !product.active || product.outOfStock
+                  ? "https://schema.org/OutOfStock"
+                  : product.madeToOrder
+                    ? "https://schema.org/BackOrder"
+                    : "https://schema.org/InStock",
               seller: { "@type": "Organization", name: "Maternidade Encantada" },
             },
             ...(product.reviewCount > 0
@@ -110,9 +113,14 @@ export function ProductDetailContent({
                 </span>
               )}
               <h1 className="text-3xl font-semibold">{product.name}</h1>
-              {product.readyToShip && !product.outOfStock && (
+              {!product.outOfStock && product.readyToShip && (
                 <span className="mt-3 inline-block rounded-full bg-rose-deep px-3 py-1 text-xs font-medium text-white">
                   Pronta entrega
+                </span>
+              )}
+              {!product.outOfStock && product.madeToOrder && (
+                <span className="mt-3 inline-block rounded-full bg-wine px-3 py-1 text-xs font-medium text-white">
+                  Sob encomenda
                 </span>
               )}
             </div>
@@ -163,7 +171,9 @@ export function ProductDetailContent({
                 </button>
               </form>
               <p className="mt-2 text-xs text-ink-soft">
-                Peça artesanal única — apenas 1 unidade disponível.
+                {product.madeToOrder
+                  ? "Peça feita sob encomenda — prazo de fabricação de 15 a 30 dias antes do envio."
+                  : "Peça artesanal única — apenas 1 unidade disponível."}
               </p>
             </>
           )}

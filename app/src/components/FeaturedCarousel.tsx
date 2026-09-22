@@ -12,6 +12,7 @@ type Product = {
   priceCents: number;
   compareAtPriceCents: number | null;
   readyToShip?: boolean;
+  madeToOrder?: boolean;
   outOfStock?: boolean;
   images: { url: string; alt: string }[];
 };
@@ -91,9 +92,14 @@ export function FeaturedCarousel({
                     className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
                   />
                 )}
-                {product.readyToShip && !product.outOfStock && (
+                {!product.outOfStock && product.readyToShip && (
                   <span className="absolute left-2.5 top-2.5 rounded-full bg-rose-deep px-2.5 py-1 text-[11px] font-medium text-white shadow-sm">
                     Pronta entrega
+                  </span>
+                )}
+                {!product.outOfStock && !product.readyToShip && product.madeToOrder && (
+                  <span className="absolute left-2.5 top-2.5 rounded-full bg-wine px-2.5 py-1 text-[11px] font-medium text-white shadow-sm">
+                    Sob encomenda
                   </span>
                 )}
               </div>

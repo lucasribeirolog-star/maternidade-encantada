@@ -35,6 +35,7 @@ export default async function EditarProdutoPage({ params, searchParams }: Props)
   ]);
   if (!product) notFound();
   const tinyOk = isTinyConfigured();
+  const currentFulfillment = product.readyToShip ? "ready" : product.madeToOrder ? "order" : "none";
 
   const updateWithId = updateProduct.bind(null, product.id);
   const deleteWithId = deleteProduct.bind(null, product.id);
@@ -269,10 +270,40 @@ export default async function EditarProdutoPage({ params, searchParams }: Props)
           <input type="checkbox" name="featured" defaultChecked={product.featured} /> Mostrar na
           vitrine da home
         </label>
-        <label className="flex items-center gap-2 text-sm">
-          <input type="checkbox" name="readyToShip" defaultChecked={product.readyToShip} /> Pronta
-          entrega (produto já pronto, envio imediato)
-        </label>
+
+        <div>
+          <p className="mb-2 text-xs uppercase tracking-wide text-ink-soft">Modalidade de venda</p>
+          <div className="space-y-2">
+            <label className="flex items-center gap-2 text-sm">
+              <input
+                type="radio"
+                name="fulfillment"
+                value="ready"
+                defaultChecked={currentFulfillment === "ready"}
+              />
+              Pronta entrega (produto já pronto, envio imediato)
+            </label>
+            <label className="flex items-center gap-2 text-sm">
+              <input
+                type="radio"
+                name="fulfillment"
+                value="order"
+                defaultChecked={currentFulfillment === "order"}
+              />
+              Para encomenda (feito sob encomenda — fabricação de 15 a 30 dias)
+            </label>
+            <label className="flex items-center gap-2 text-sm">
+              <input
+                type="radio"
+                name="fulfillment"
+                value="none"
+                defaultChecked={currentFulfillment === "none"}
+              />
+              Nenhuma das opções
+            </label>
+          </div>
+        </div>
+
         <label className="flex items-center gap-2 text-sm">
           <input type="checkbox" name="active" defaultChecked={product.active} /> Produto ativo
           (visível na loja)
