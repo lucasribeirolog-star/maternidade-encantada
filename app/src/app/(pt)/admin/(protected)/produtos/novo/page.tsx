@@ -114,7 +114,7 @@ export default async function NovoProdutoPage() {
           <p className="mb-2 text-xs uppercase tracking-wide text-ink-soft">Modalidade de venda</p>
           <div className="space-y-2">
             <label className="flex items-center gap-2 text-sm">
-              <input type="radio" name="fulfillment" value="ready" />
+              <input type="radio" name="fulfillment" value="ready" defaultChecked />
               Pronta entrega (produto já pronto, envio imediato)
             </label>
             <label className="flex items-center gap-2 text-sm">
@@ -122,7 +122,7 @@ export default async function NovoProdutoPage() {
               Para encomenda (feito sob encomenda — fabricação de 15 a 30 dias)
             </label>
             <label className="flex items-center gap-2 text-sm">
-              <input type="radio" name="fulfillment" value="none" defaultChecked />
+              <input type="radio" name="fulfillment" value="none" />
               Nenhuma das opções
             </label>
           </div>
