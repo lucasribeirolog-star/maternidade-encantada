@@ -15,7 +15,7 @@ export async function Header({ locale = "pt" }: { locale?: Locale }) {
     { href: `${base}/produtos`, label: locale === "pt" ? "Bonecas Pronta Entrega" : t.nav.products },
     ...(locale === "pt"
       ? [
-          { href: "/encomenda", label: "Para Encomenda" },
+          { href: "/encomenda", label: "Bonecas Para Encomenda" },
           { href: "/categoria/kits-e-enxoval", label: t.nav.kits },
           { href: "/categoria/cursos", label: t.nav.courses },
         ]
