@@ -99,6 +99,7 @@ export async function createOrder(input: CreateOrderInput) {
           nameSnapshot: item.product.name,
           priceCentsSnapshot: item.product.priceCents,
           quantity: item.quantity,
+          customizationNotes: item.customizationNotes,
         })),
       },
     },

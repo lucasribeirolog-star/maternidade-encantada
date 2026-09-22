@@ -138,29 +138,57 @@ export async function assertItemsInStock(
   }
 }
 
+/**
+ * Quando uma peça "pronta entrega" esgota no Tiny, ela deixa de ser
+ * rastreada por estoque e passa automaticamente para "para encomenda" — a
+ * peça original acabou, mas pode ser refeita sob encomenda. Desvincula do
+ * Tiny (senão a próxima sincronização voltaria a marcar como esgotado e
+ * bloquearia a compra de novo).
+ */
+export async function convertSoldOutToMadeToOrder(productId: string) {
+  await prisma.product.update({
+    where: { id: productId },
+    data: {
+      readyToShip: false,
+      madeToOrder: true,
+      outOfStock: false,
+      tinyProductId: null,
+      tinyCodigo: null,
+      stockSyncedAt: null,
+    },
+  });
+}
+
 /** Sincroniza o estoque de todos os produtos vinculados ao Tiny (chamado periodicamente). */
 export async function syncAllProductStock() {
-  if (!isTinyConfigured()) return { checked: 0, outOfStock: 0 };
+  if (!isTinyConfigured()) return { checked: 0, outOfStock: 0, convertedToMadeToOrder: 0 };
 
   const products = await prisma.product.findMany({
     where: { tinyProductId: { not: null } },
-    select: { id: true, tinyProductId: true },
+    select: { id: true, tinyProductId: true, readyToShip: true },
   });
 
   let outOfStock = 0;
+  let convertedToMadeToOrder = 0;
   for (const product of products) {
     const saldo = await getTinyStock(product.tinyProductId!);
     if (saldo === null) continue;
     const isOut = saldo <= 0;
     if (isOut) outOfStock++;
-    await prisma.product.update({
-      where: { id: product.id },
-      data: { outOfStock: isOut, stockSyncedAt: new Date() },
-    });
+
+    if (isOut && product.readyToShip) {
+      await convertSoldOutToMadeToOrder(product.id);
+      convertedToMadeToOrder++;
+    } else {
+      await prisma.product.update({
+        where: { id: product.id },
+        data: { outOfStock: isOut, stockSyncedAt: new Date() },
+      });
+    }
     await new Promise((resolve) => setTimeout(resolve, 350)); // evita rate limit da API do Tiny
   }
 
-  return { checked: products.length, outOfStock };
+  return { checked: products.length, outOfStock, convertedToMadeToOrder };
 }
 
 /**

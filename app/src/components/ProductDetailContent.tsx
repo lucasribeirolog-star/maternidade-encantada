@@ -164,11 +164,34 @@ export function ProductDetailContent({
             </div>
           ) : (
             <>
-              <form action={addToCartFormAction} className="mt-8 flex items-center gap-4">
+              <form action={addToCartFormAction} className="mt-8">
                 <input type="hidden" name="productId" value={product.id} />
-                <button type="submit" className={btnClass("primary")}>
-                  {t.addToCart}
-                </button>
+                {product.madeToOrder && (
+                  <div className="mb-4">
+                    <label
+                      htmlFor="customizationNotes"
+                      className="mb-1 block text-xs uppercase tracking-wide text-ink-soft"
+                    >
+                      Alguma personalização? (opcional)
+                    </label>
+                    <textarea
+                      id="customizationNotes"
+                      name="customizationNotes"
+                      rows={3}
+                      placeholder="Ex: cor dos olhos, tom da pele, cor e estilo do cabelo..."
+                      className="w-full rounded-xl border border-line bg-white px-4 py-3 text-sm outline-none focus:border-rose"
+                    />
+                    <p className="mt-1 text-xs text-ink-soft">
+                      Conte pra gente como você imagina sua boneca — cor dos olhos, cabelo, tom de
+                      pele etc. Fazemos o possível pra atender, dentro do que o modelo permite.
+                    </p>
+                  </div>
+                )}
+                <div className="flex items-center gap-4">
+                  <button type="submit" className={btnClass("primary")}>
+                    {t.addToCart}
+                  </button>
+                </div>
               </form>
               <p className="mt-2 text-xs text-ink-soft">
                 {product.madeToOrder

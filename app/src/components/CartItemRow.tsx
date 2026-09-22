@@ -10,6 +10,7 @@ type Props = {
   item: {
     id: string;
     quantity: number;
+    customizationNotes: string | null;
     product: {
       slug: string;
       name: string;
@@ -45,6 +46,12 @@ export function CartItemRow({ item }: Props) {
           {item.product.name}
         </Link>
         <p className="mt-1 text-sm text-ink-soft">{formatCents(item.product.priceCents)}</p>
+
+        {item.customizationNotes && (
+          <p className="mt-2 text-xs text-ink-soft">
+            <span className="font-medium text-ink">Personalização:</span> {item.customizationNotes}
+          </p>
+        )}
 
         <div className="mt-3 flex items-center gap-3">
           <span className="text-xs text-ink-soft">Peça única · 1 unidade</span>

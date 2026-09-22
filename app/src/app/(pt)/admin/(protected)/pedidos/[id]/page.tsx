@@ -44,11 +44,19 @@ export default async function AdminPedidoPage({ params }: Props) {
       <div className="mt-6 rounded-xl border border-line">
         <ul className="divide-y divide-line">
           {order.items.map((item) => (
-            <li key={item.id} className="flex justify-between px-4 py-3 text-sm">
-              <span>
-                {item.quantity}× {item.nameSnapshot}
-              </span>
-              <span>{formatCents(item.priceCentsSnapshot * item.quantity)}</span>
+            <li key={item.id} className="px-4 py-3 text-sm">
+              <div className="flex justify-between">
+                <span>
+                  {item.quantity}× {item.nameSnapshot}
+                </span>
+                <span>{formatCents(item.priceCentsSnapshot * item.quantity)}</span>
+              </div>
+              {item.customizationNotes && (
+                <p className="mt-1 text-xs text-rose-deep">
+                  <span className="font-medium">Personalização pedida:</span>{" "}
+                  {item.customizationNotes}
+                </p>
+              )}
             </li>
           ))}
         </ul>

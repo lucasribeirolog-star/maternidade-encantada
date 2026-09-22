@@ -5,7 +5,13 @@ import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
 import { prisma } from "@/lib/prisma";
 import { requireAdmin } from "@/lib/adminGuard";
-import { getTinyStock, searchTinyProductsByCode, createTinyProduct, isTinyConfigured } from "@/lib/tiny";
+import {
+  getTinyStock,
+  searchTinyProductsByCode,
+  createTinyProduct,
+  isTinyConfigured,
+  convertSoldOutToMadeToOrder,
+} from "@/lib/tiny";
 
 function slugify(value: string) {
   return value
@@ -257,14 +263,21 @@ export async function syncProductStock(productId: string) {
   const saldo = await getTinyStock(product.tinyProductId);
   if (saldo === null) return;
 
-  await prisma.product.update({
-    where: { id: productId },
-    data: { outOfStock: saldo <= 0, stockSyncedAt: new Date() },
-  });
+  const isOut = saldo <= 0;
+  if (isOut && product.readyToShip) {
+    await convertSoldOutToMadeToOrder(productId);
+  } else {
+    await prisma.product.update({
+      where: { id: productId },
+      data: { outOfStock: isOut, stockSyncedAt: new Date() },
+    });
+  }
 
   revalidatePath("/admin/produtos");
   revalidatePath(`/admin/produtos/${productId}`);
   revalidatePath("/produtos");
+  revalidatePath("/pronta-entrega");
+  revalidatePath("/encomenda");
 }
 
 /** Adiciona uma ou mais fotos à galeria de um produto já cadastrado, sem mexer no resto dos dados. */
