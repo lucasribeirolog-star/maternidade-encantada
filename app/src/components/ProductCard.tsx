@@ -1,7 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { formatCents } from "@/lib/money";
-import { LOCALE_PATHS, type Locale } from "@/lib/i18n";
+import { dictionaries, LOCALE_PATHS, type Locale } from "@/lib/i18n";
 import { StarRating } from "./StarRating";
 import { WishlistButton } from "./WishlistButton";
 
@@ -28,6 +28,7 @@ export function ProductCard({
 }) {
   const image = product.images[0];
   const base = LOCALE_PATHS[locale] === "/" ? "" : LOCALE_PATHS[locale];
+  const t = dictionaries[locale].fulfillment;
 
   return (
     <Link
@@ -54,16 +55,16 @@ export function ProductCard({
         )}
         {product.outOfStock ? (
           <span className="absolute left-3 top-3 rounded-full bg-ink/80 px-3 py-1 text-xs font-medium text-white">
-            Esgotado
+            {t.soldOut}
           </span>
         ) : product.readyToShip ? (
           <span className="absolute left-3 top-3 rounded-full bg-rose-deep px-3 py-1 text-xs font-medium text-white shadow-sm">
-            Pronta entrega
+            {t.readyToShip}
           </span>
         ) : (
           product.madeToOrder && (
             <span className="absolute left-3 top-3 rounded-full bg-wine px-3 py-1 text-xs font-medium text-white shadow-sm">
-              Sob encomenda
+              {t.madeToOrder}
             </span>
           )
         )}

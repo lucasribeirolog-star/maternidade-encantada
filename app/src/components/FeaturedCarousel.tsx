@@ -28,6 +28,7 @@ export function FeaturedCarousel({
   locale?: Locale;
 }) {
   const t = dictionaries[locale].showcase;
+  const tFulfillment = dictionaries[locale].fulfillment;
   const base = LOCALE_PATHS[locale] === "/" ? "" : LOCALE_PATHS[locale];
   const trackRef = useRef<HTMLDivElement>(null);
   const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
@@ -94,12 +95,12 @@ export function FeaturedCarousel({
                 )}
                 {!product.outOfStock && product.readyToShip && (
                   <span className="absolute left-2.5 top-2.5 rounded-full bg-rose-deep px-2.5 py-1 text-[11px] font-medium text-white shadow-sm">
-                    Pronta entrega
+                    {tFulfillment.readyToShip}
                   </span>
                 )}
                 {!product.outOfStock && !product.readyToShip && product.madeToOrder && (
                   <span className="absolute left-2.5 top-2.5 rounded-full bg-wine px-2.5 py-1 text-[11px] font-medium text-white shadow-sm">
-                    Sob encomenda
+                    {tFulfillment.madeToOrder}
                   </span>
                 )}
               </div>

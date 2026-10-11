@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { createMercadoPagoPayment, MercadoPagoNotConfiguredError } from "@/lib/mercadoPago";
-import { getCartToken } from "@/lib/cart";
+import { removeSoldProductsFromCarts } from "@/lib/cart";
 import { syncOrderToTiny } from "@/lib/tiny";
 import { sendOrderConfirmationEmail } from "@/lib/email";
 
@@ -59,17 +59,15 @@ export async function POST(req: NextRequest) {
     });
 
     if (newStatus === "paid") {
-      const cartToken = await getCartToken();
-      if (cartToken) {
-        const cart = await prisma.cart.findUnique({ where: { token: cartToken } });
-        if (cart) await prisma.cartItem.deleteMany({ where: { cartId: cart.id } });
-      }
-      await syncOrderToTiny(order.id);
       const orderWithItems = await prisma.order.findUnique({
         where: { id: order.id },
         include: { items: true },
       });
-      if (orderWithItems) await sendOrderConfirmationEmail(orderWithItems);
+      if (orderWithItems) {
+        await removeSoldProductsFromCarts(orderWithItems.items.map((item) => item.productId));
+        await sendOrderConfirmationEmail(orderWithItems);
+      }
+      await syncOrderToTiny(order.id);
     }
 
     return NextResponse.json({ status: payment.status, isPix: Boolean(pixData?.qr_code) });

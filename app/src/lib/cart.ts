@@ -49,6 +49,17 @@ export async function ensureCart() {
   });
 }
 
+/**
+ * Remove um produto do carrinho de todo mundo que o tinha ali — usado quando
+ * um pedido é confirmado como pago, já que cada boneca é peça única e deixa
+ * de existir pra compra assim que vendida (independente de quem pagou).
+ */
+export async function removeSoldProductsFromCarts(productIds: (string | null)[]) {
+  const ids = productIds.filter((id): id is string => Boolean(id));
+  if (ids.length === 0) return;
+  await prisma.cartItem.deleteMany({ where: { productId: { in: ids } } });
+}
+
 export function cartTotals(
   cart: { items: { quantity: number; product: { priceCents: number } }[] } | null
 ) {

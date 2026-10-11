@@ -41,6 +41,7 @@ export function ProductDetailContent({
   product: ProductDetail;
 }) {
   const t = dictionaries[locale].productDetail;
+  const tFulfillment = dictionaries[locale].fulfillment;
   const localeBase = LOCALE_PATHS[locale] === "/" ? "" : LOCALE_PATHS[locale];
   const productUrl = `${BASE_URL}${localeBase}/produtos/${product.slug}`;
   const productsUrl = `${BASE_URL}${localeBase}/produtos`;
@@ -115,12 +116,12 @@ export function ProductDetailContent({
               <h1 className="text-3xl font-semibold">{product.name}</h1>
               {!product.outOfStock && product.readyToShip && (
                 <span className="mt-3 inline-block rounded-full bg-rose-deep px-3 py-1 text-xs font-medium text-white">
-                  Pronta entrega
+                  {tFulfillment.readyToShip}
                 </span>
               )}
               {!product.outOfStock && product.madeToOrder && (
                 <span className="mt-3 inline-block rounded-full bg-wine px-3 py-1 text-xs font-medium text-white">
-                  Sob encomenda
+                  {tFulfillment.madeToOrder}
                 </span>
               )}
             </div>
@@ -156,11 +157,9 @@ export function ProductDetailContent({
           {product.outOfStock ? (
             <div className="mt-8">
               <span className="inline-block rounded-full bg-ink/80 px-4 py-2 text-sm font-medium text-white">
-                Esgotado
+                {tFulfillment.soldOut}
               </span>
-              <p className="mt-2 text-xs text-ink-soft">
-                Essa peça já foi vendida. Confira outras bonecas disponíveis na coleção.
-              </p>
+              <p className="mt-2 text-xs text-ink-soft">{tFulfillment.soldOutNote}</p>
             </div>
           ) : (
             <>
@@ -172,19 +171,16 @@ export function ProductDetailContent({
                       htmlFor="customizationNotes"
                       className="mb-1 block text-xs uppercase tracking-wide text-ink-soft"
                     >
-                      Alguma personalização? (opcional)
+                      {tFulfillment.customizationLabel}
                     </label>
                     <textarea
                       id="customizationNotes"
                       name="customizationNotes"
                       rows={3}
-                      placeholder="Ex: cor dos olhos, tom da pele, cor e estilo do cabelo..."
+                      placeholder={tFulfillment.customizationPlaceholder}
                       className="w-full rounded-xl border border-line bg-white px-4 py-3 text-sm outline-none focus:border-rose"
                     />
-                    <p className="mt-1 text-xs text-ink-soft">
-                      Conte pra gente como você imagina sua boneca — cor dos olhos, cabelo, tom de
-                      pele etc. Fazemos o possível pra atender, dentro do que o modelo permite.
-                    </p>
+                    <p className="mt-1 text-xs text-ink-soft">{tFulfillment.customizationHelp}</p>
                   </div>
                 )}
                 <div className="flex items-center gap-4">
@@ -194,9 +190,7 @@ export function ProductDetailContent({
                 </div>
               </form>
               <p className="mt-2 text-xs text-ink-soft">
-                {product.madeToOrder
-                  ? "Peça feita sob encomenda — prazo de fabricação de 15 a 30 dias antes do envio."
-                  : "Peça artesanal única — apenas 1 unidade disponível."}
+                {product.madeToOrder ? tFulfillment.madeToOrderNote : tFulfillment.readyToShipNote}
               </p>
             </>
           )}

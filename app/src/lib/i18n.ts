@@ -58,6 +58,17 @@ type Dictionary = {
   };
   productsPage: { kicker: string; title: string; subtitle: string; empty: string };
   productDetail: { addToCart: string; weight: string; dimensions: string; reviews: string };
+  fulfillment: {
+    readyToShip: string;
+    madeToOrder: string;
+    soldOut: string;
+    readyToShipNote: string;
+    madeToOrderNote: string;
+    soldOutNote: string;
+    customizationLabel: string;
+    customizationPlaceholder: string;
+    customizationHelp: string;
+  };
   footer: {
     tagline: string;
     shop: string;
@@ -152,6 +163,18 @@ export const dictionaries: Record<Locale, Dictionary> = {
       weight: "Peso",
       dimensions: "Dimensões",
       reviews: "avaliações",
+    },
+    fulfillment: {
+      readyToShip: "Pronta entrega",
+      madeToOrder: "Sob encomenda",
+      soldOut: "Esgotado",
+      readyToShipNote: "Peça artesanal única — apenas 1 unidade disponível.",
+      madeToOrderNote: "Peça feita sob encomenda — prazo de fabricação de 15 a 30 dias antes do envio.",
+      soldOutNote: "Essa peça já foi vendida. Confira outras bonecas disponíveis na coleção.",
+      customizationLabel: "Alguma personalização? (opcional)",
+      customizationPlaceholder: "Ex: cor dos olhos, tom da pele, cor e estilo do cabelo...",
+      customizationHelp:
+        "Conte pra gente como você imagina sua boneca — cor dos olhos, cabelo, tom de pele etc. Fazemos o possível pra atender, dentro do que o modelo permite.",
     },
     footer: {
       tagline: "Bonecas reborn feitas à mão, com realismo e carinho.",
@@ -268,6 +291,18 @@ export const dictionaries: Record<Locale, Dictionary> = {
       dimensions: "Dimensions",
       reviews: "reviews",
     },
+    fulfillment: {
+      readyToShip: "Ready to ship",
+      madeToOrder: "Made to order",
+      soldOut: "Sold out",
+      readyToShipNote: "One-of-a-kind handmade piece — only 1 unit available.",
+      madeToOrderNote: "Made to order — allow 15 to 30 days for crafting before shipping.",
+      soldOutNote: "This piece has already been sold. Check out our other available dolls.",
+      customizationLabel: "Any customization? (optional)",
+      customizationPlaceholder: "E.g.: eye color, skin tone, hair color and style...",
+      customizationHelp:
+        "Tell us how you imagine your doll — eye color, hair, skin tone, etc. We'll do our best to accommodate, within what the model allows.",
+    },
     footer: {
       tagline: "Handmade reborn dolls, made with realism and care.",
       shop: "Shop",
@@ -382,6 +417,18 @@ export const dictionaries: Record<Locale, Dictionary> = {
       weight: "Peso",
       dimensions: "Dimensiones",
       reviews: "reseñas",
+    },
+    fulfillment: {
+      readyToShip: "Entrega inmediata",
+      madeToOrder: "Bajo pedido",
+      soldOut: "Agotado",
+      readyToShipNote: "Pieza artesanal única — solo 1 unidad disponible.",
+      madeToOrderNote: "Pieza hecha bajo pedido — plazo de fabricación de 15 a 30 días antes del envío.",
+      soldOutNote: "Esta pieza ya fue vendida. Descubre otras muñecas disponibles en la colección.",
+      customizationLabel: "¿Alguna personalización? (opcional)",
+      customizationPlaceholder: "Ej.: color de ojos, tono de piel, color y estilo de cabello...",
+      customizationHelp:
+        "Cuéntanos cómo imaginas tu muñeca — color de ojos, cabello, tono de piel, etc. Haremos lo posible por atenderlo, dentro de lo que el modelo permite.",
     },
     footer: {
       tagline: "Muñecas reborn hechas a mano, con realismo y cariño.",
