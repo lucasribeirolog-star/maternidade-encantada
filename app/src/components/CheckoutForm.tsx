@@ -78,7 +78,7 @@ export function CheckoutForm() {
 
     startTransition(async () => {
       try {
-        const orderId = await createOrder({
+        const result = await createOrder({
           customerName: String(formData.get("customerName") ?? ""),
           customerEmail: String(formData.get("customerEmail") ?? ""),
           customerPhone: String(formData.get("customerPhone") ?? ""),
@@ -93,9 +93,15 @@ export function CheckoutForm() {
           shippingMethodName: `${selectedOption.company} ${selectedOption.name}`,
           shippingCostCents: selectedOption.priceCents,
         });
-        router.push(`/checkout/pagamento/${orderId}`);
-      } catch (err) {
-        setFormError(err instanceof Error ? err.message : "Erro ao criar pedido.");
+        if (!result.ok) {
+          setFormError(result.error);
+          return;
+        }
+        router.push(`/checkout/pagamento/${result.orderId}`);
+      } catch {
+        // Erro inesperado (ex: falha de banco) — a mensagem real não chega
+        // ao cliente em produção, então mostramos um aviso genérico.
+        setFormError("Não foi possível concluir seu pedido. Tente novamente em instantes.");
       }
     });
   }

@@ -56,20 +56,29 @@ export type CreateOrderInput = {
   shippingCostCents: number;
 };
 
-export async function createOrder(input: CreateOrderInput) {
+export type CreateOrderResult = { ok: true; orderId: string } | { ok: false; error: string };
+
+export async function createOrder(input: CreateOrderInput): Promise<CreateOrderResult> {
   const cart = await getCartWithItems();
   const items = cart?.items ?? [];
   if (items.length === 0) {
-    throw new Error("Carrinho vazio.");
+    return { ok: false, error: "Carrinho vazio." };
   }
 
-  await assertItemsInStock(
-    items.map((item) => ({
-      productId: item.productId,
-      name: item.product.name,
-      tinyProductId: item.product.tinyProductId,
-    }))
-  );
+  try {
+    await assertItemsInStock(
+      items.map((item) => ({
+        productId: item.productId,
+        name: item.product.name,
+        tinyProductId: item.product.tinyProductId,
+      }))
+    );
+  } catch (err) {
+    // Erro esperado de negócio (item esgotado) — devolve como dado em vez de
+    // lançar, porque o Next.js troca a mensagem de exceções de Server Action
+    // por um erro genérico em produção e o cliente nunca veria o motivo real.
+    return { ok: false, error: err instanceof Error ? err.message : "Erro ao verificar estoque." };
+  }
 
   const { subtotalCents } = cartTotals(cart);
   const totalCents = subtotalCents + input.shippingCostCents;
@@ -105,5 +114,5 @@ export async function createOrder(input: CreateOrderInput) {
     },
   });
 
-  return order.id;
+  return { ok: true, orderId: order.id };
 }
