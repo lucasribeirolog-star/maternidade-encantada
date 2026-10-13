@@ -144,7 +144,7 @@ export function ProductDetailContent({
             <span className="text-2xl text-wine font-display">
               {formatCents(product.priceCents)}
             </span>
-            {product.compareAtPriceCents && (
+            {product.compareAtPriceCents != null && product.compareAtPriceCents > 0 && (
               <span className="text-base text-ink-soft line-through">
                 {formatCents(product.compareAtPriceCents)}
               </span>
