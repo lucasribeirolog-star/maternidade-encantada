@@ -98,7 +98,8 @@ export async function createProduct(formData: FormData) {
   const description = String(formData.get("description") ?? "").trim();
   const priceCents = Math.round(Number(formData.get("price") ?? 0) * 100);
   const compareAtPriceRaw = String(formData.get("compareAtPrice") ?? "").trim();
-  const compareAtPriceCents = compareAtPriceRaw ? Math.round(Number(compareAtPriceRaw) * 100) : null;
+  const compareAtPriceParsed = compareAtPriceRaw ? Math.round(Number(compareAtPriceRaw) * 100) : 0;
+  const compareAtPriceCents = compareAtPriceParsed > 0 ? compareAtPriceParsed : null;
   const categoryId = String(formData.get("categoryId") ?? "") || null;
   const weightGrams = Number(formData.get("weightGrams") ?? 500);
   const heightCm = Number(formData.get("heightCm") ?? 20);
@@ -168,7 +169,8 @@ export async function updateProduct(productId: string, formData: FormData) {
   const description = String(formData.get("description") ?? "").trim();
   const priceCents = Math.round(Number(formData.get("price") ?? 0) * 100);
   const compareAtPriceRaw = String(formData.get("compareAtPrice") ?? "").trim();
-  const compareAtPriceCents = compareAtPriceRaw ? Math.round(Number(compareAtPriceRaw) * 100) : null;
+  const compareAtPriceParsed = compareAtPriceRaw ? Math.round(Number(compareAtPriceRaw) * 100) : 0;
+  const compareAtPriceCents = compareAtPriceParsed > 0 ? compareAtPriceParsed : null;
   const categoryId = String(formData.get("categoryId") ?? "") || null;
   const weightGrams = Number(formData.get("weightGrams") ?? 500);
   const heightCm = Number(formData.get("heightCm") ?? 20);

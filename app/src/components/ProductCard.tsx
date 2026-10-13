@@ -79,7 +79,7 @@ export function ProductCard({
         </div>
         <div className="mt-1 flex items-baseline gap-2">
           <span className="text-sm text-wine">{formatCents(product.priceCents)}</span>
-          {product.compareAtPriceCents && (
+          {product.compareAtPriceCents != null && product.compareAtPriceCents > 0 && (
             <span className="text-xs text-ink-soft line-through">
               {formatCents(product.compareAtPriceCents)}
             </span>
